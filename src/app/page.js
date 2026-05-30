@@ -43,6 +43,10 @@ const VISA_TYPES = [
   "Subclass 485 - Temporary Graduate",
   "Subclass 600 - Visitor",
   "Subclass 417/462 - Working Holiday",
+  "Skill assessment",
+  "Child visa",
+  "Bridging visa",
+  "ART上诉",
   "Other"
 ]
 
