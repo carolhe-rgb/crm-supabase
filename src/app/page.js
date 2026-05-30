@@ -5,11 +5,11 @@ import { supabase } from '@/lib/supabase'
 
 // ==================== Mock 数据 ====================
 const MOCK_DATA = [
-  { id: "IMM-2025-0001", client_name: "张三", agent: "David", visa_type: "Subclass 189 - Skilled Independent", source: "Referral", status: "Lodged", lodgement_date: "2025-03-15", decision_date: "", service_fee: 5500, payment_status: "Deposit Paid", paid_at: null, notes: "IT 职业评估已完成", is_urgent: false, created_at: "2025-03-10T08:00:00Z" },
-  { id: "IMM-2025-0002", client_name: "李四", agent: "Ming", visa_type: "Subclass 500 - Student", source: "WeChat", status: "Document Collection", lodgement_date: "", decision_date: "", service_fee: 3000, payment_status: "Unpaid", paid_at: null, notes: "等待成绩单", is_urgent: true, created_at: "2025-03-12T10:00:00Z" },
-  { id: "IMM-2025-0003", client_name: "王五", agent: "Jett", visa_type: "Subclass 820/801 - Partner Onshore", source: "Walk-in", status: "Granted", lodgement_date: "2024-11-20", decision_date: "2025-02-28", service_fee: 4500, payment_status: "Fully Paid", paid_at: "2025-01-15T09:00:00Z", notes: "配偶签证顺利下签", is_urgent: false, created_at: "2024-11-15T08:00:00Z" },
-  { id: "IMM-2025-0004", client_name: "赵六", agent: "David", visa_type: "Subclass 190 - Skilled Nominated", source: "Website", status: "Under Review", lodgement_date: "2025-01-10", decision_date: "2025-06-30", service_fee: 6000, payment_status: "Partially Paid", paid_at: null, notes: "塔州州担保已获邀", is_urgent: false, created_at: "2025-01-05T08:00:00Z" },
-  { id: "IMM-2025-0005", client_name: "陈七", agent: "Ming", visa_type: "Subclass 143 - Contributory Parent", source: "Referral", status: "Enquiry", lodgement_date: "", decision_date: "", service_fee: 8000, payment_status: "Unpaid", paid_at: null, notes: "初步咨询，等待材料清单", is_urgent: false, created_at: "2025-03-20T14:00:00Z" }
+  { id: "IMM-2025-0001", client_name: "张三", agent: "David GUO", visa_type: "Subclass 189 - Skilled Independent", source: "Referral", status: "Lodged", lodgement_date: "2025-03-15", decision_date: "", service_fee: 5500, payment_status: "Deposit Paid", paid_at: null, notes: "IT 职业评估已完成", is_urgent: false, created_at: "2025-03-10T08:00:00Z" },
+  { id: "IMM-2025-0002", client_name: "李四", agent: "Yulan HE", visa_type: "Subclass 500 - Student", source: "WeChat", status: "Document Collection", lodgement_date: "", decision_date: "", service_fee: 3000, payment_status: "Unpaid", paid_at: null, notes: "等待成绩单", is_urgent: true, created_at: "2025-03-12T10:00:00Z" },
+  { id: "IMM-2025-0003", client_name: "王五", agent: "Shuoren CHEN", visa_type: "Subclass 820/801 - Partner Onshore", source: "Walk-in", status: "Granted", lodgement_date: "2024-11-20", decision_date: "2025-02-28", service_fee: 4500, payment_status: "Fully Paid", paid_at: "2025-01-15T09:00:00Z", notes: "配偶签证顺利下签", is_urgent: false, created_at: "2024-11-15T08:00:00Z" },
+  { id: "IMM-2025-0004", client_name: "赵六", agent: "David GUO", visa_type: "Subclass 190 - Skilled Nominated", source: "Website", status: "Under Review", lodgement_date: "2025-01-10", decision_date: "2025-06-30", service_fee: 6000, payment_status: "Partially Paid", paid_at: null, notes: "塔州州担保已获邀", is_urgent: false, created_at: "2025-01-05T08:00:00Z" },
+  { id: "IMM-2025-0005", client_name: "陈七", agent: "Yulan HE", visa_type: "Subclass 143 - Contributory Parent", source: "Referral", status: "Enquiry", lodgement_date: "", decision_date: "", service_fee: 8000, payment_status: "Unpaid", paid_at: null, notes: "初步咨询，等待材料清单", is_urgent: false, created_at: "2025-03-20T14:00:00Z" }
 ]
 
 const USE_MOCK = false  // 设置为 true 使用 mock 数据，false 连接 Supabase
@@ -58,7 +58,7 @@ const SOURCES = [
   "Other"
 ]
 
-const AGENTS = ["David", "Ming", "Jett"]
+const AGENTS = ["David GUO", "Yulan HE", "Shuoren CHEN", "Susie YANG"]
 
 const PAYMENT_STATUSES = ["Unpaid", "Deposit Paid", "Partially Paid", "Fully Paid", "Refunded"]
 
@@ -67,9 +67,10 @@ function verifyLogin(name, password) {
     return { role: "manager", agent: null }
   }
   const agentPasswords = {
-    "David": "ozsky2022",
-    "Ming": "ozsky0722",
-    "Jett": "Ozsky2025"
+    "David GUO": "ozsky2022",
+    "Yulan HE": "ozsky0722",
+    "Shuoren CHEN": "Ozsky2025",
+    "Susie YANG": "Ozsky2025"
   }
   if (AGENTS.includes(name) && agentPasswords[name] === password) {
     return { role: "agent", agent: name }
