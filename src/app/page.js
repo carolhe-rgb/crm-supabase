@@ -3,6 +3,17 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
+// ==================== Mock 数据 ====================
+const MOCK_DATA = [
+  { id: "IMM-2025-0001", client_name: "张三", agent: "David", visa_type: "Subclass 189 - Skilled Independent", source: "Referral", status: "Lodged", lodgement_date: "2025-03-15", decision_date: "", service_fee: 5500, payment_status: "Deposit Paid", paid_at: null, notes: "IT 职业评估已完成", is_urgent: false, created_at: "2025-03-10T08:00:00Z" },
+  { id: "IMM-2025-0002", client_name: "李四", agent: "Ming", visa_type: "Subclass 500 - Student", source: "WeChat", status: "Document Collection", lodgement_date: "", decision_date: "", service_fee: 3000, payment_status: "Unpaid", paid_at: null, notes: "等待成绩单", is_urgent: true, created_at: "2025-03-12T10:00:00Z" },
+  { id: "IMM-2025-0003", client_name: "王五", agent: "Jett", visa_type: "Subclass 820/801 - Partner Onshore", source: "Walk-in", status: "Granted", lodgement_date: "2024-11-20", decision_date: "2025-02-28", service_fee: 4500, payment_status: "Fully Paid", paid_at: "2025-01-15T09:00:00Z", notes: "配偶签证顺利下签", is_urgent: false, created_at: "2024-11-15T08:00:00Z" },
+  { id: "IMM-2025-0004", client_name: "赵六", agent: "David", visa_type: "Subclass 190 - Skilled Nominated", source: "Website", status: "Under Review", lodgement_date: "2025-01-10", decision_date: "2025-06-30", service_fee: 6000, payment_status: "Partially Paid", paid_at: null, notes: "塔州州担保已获邀", is_urgent: false, created_at: "2025-01-05T08:00:00Z" },
+  { id: "IMM-2025-0005", client_name: "陈七", agent: "Ming", visa_type: "Subclass 143 - Contributory Parent", source: "Referral", status: "Enquiry", lodgement_date: "", decision_date: "", service_fee: 8000, payment_status: "Unpaid", paid_at: null, notes: "初步咨询，等待材料清单", is_urgent: false, created_at: "2025-03-20T14:00:00Z" }
+]
+
+const USE_MOCK = true  // 设置为 true 使用 mock 数据，不连接 Supabase
+
 // ==================== 常量配置 ====================
 const STATUSES = [
   "Enquiry", 
@@ -128,6 +139,18 @@ export default function Home() {
 
   async function loadData() {
     setLoading(true)
+    
+    if (USE_MOCK) {
+      // Mock 数据模式
+      let data = [...MOCK_DATA]
+      if (user.role === "agent") {
+        data = data.filter(c => c.agent === user.agent)
+      }
+      setClients(data)
+      setLoading(false)
+      return
+    }
+    
     const { data, error } = await supabase
       .from('clients')
       .select('*')
@@ -144,6 +167,40 @@ export default function Home() {
   }
 
   async function saveClient(client) {
+    if (USE_MOCK) {
+      const saveAgent = user.role === "manager" ? client.agent : user.agent
+      const shouldCancelUrgent = ["Granted", "Refused", "Withdrawn"].includes(client.status)
+      const newClient = {
+        id: client.id,
+        client_name: client.clientName,
+        agent: saveAgent,
+        visa_type: client.visaType,
+        source: client.source,
+        status: client.status,
+        lodgement_date: client.lodgementDate || null,
+        decision_date: client.decisionDate || null,
+        service_fee: Number(client.serviceFee || 0),
+        payment_status: client.paymentStatus || "Unpaid",
+        paid_at: null,
+        notes: client.notes,
+        is_urgent: shouldCancelUrgent ? false : (client.isUrgent || false),
+        created_at: new Date().toISOString()
+      }
+      
+      if (editingId) {
+        const existing = clients.find(c => c.id === editingId)
+        if (existing) {
+          newClient.paid_at = existing.paid_at
+          newClient.payment_status = existing.payment_status
+        }
+        setClients(clients.map(c => c.id === editingId ? newClient : c))
+      } else {
+        setClients([newClient, ...clients])
+      }
+      setModalOpen(false)
+      return
+    }
+    
     const old = editingId ? clients.find(c => c.id === editingId) : null
     const saveAgent = user.role === "manager" ? client.agent : user.agent
     const shouldCancelUrgent = ["Granted", "Refused", "Withdrawn"].includes(client.status)
@@ -174,6 +231,12 @@ export default function Home() {
 
   async function deleteClient(id) {
     if (!confirm('确定删除？')) return
+    
+    if (USE_MOCK) {
+      setClients(clients.filter(c => c.id !== id))
+      return
+    }
+    
     await supabase.from('clients').delete().eq('id', id)
     await loadData()
   }
@@ -240,6 +303,16 @@ export default function Home() {
   async function markPaymentStatus(id, newStatus) {
     const c = clients.find(x => x.id === id)
     if (user.role === "agent" && c.agent !== user.agent) return
+    
+    if (USE_MOCK) {
+      setClients(clients.map(item => item.id === id ? {
+        ...item,
+        payment_status: newStatus,
+        paid_at: newStatus === "Fully Paid" ? new Date().toISOString() : null
+      } : item))
+      return
+    }
+    
     await supabase.from('clients').update({
       payment_status: newStatus,
       paid_at: newStatus === "Fully Paid" ? new Date().toISOString() : null
@@ -250,6 +323,12 @@ export default function Home() {
   async function toggleUrgent(id) {
     const c = clients.find(x => x.id === id)
     if (user.role === "agent" && c.agent !== user.agent) { alert("您只能标记自己的客户"); return }
+    
+    if (USE_MOCK) {
+      setClients(clients.map(item => item.id === id ? { ...item, is_urgent: !item.is_urgent } : item))
+      return
+    }
+    
     const { error } = await supabase.from('clients').update({ is_urgent: !c.is_urgent }).eq('id', id)
     if (error) { alert('更新失败: ' + error.message); return }
     await loadData()
@@ -257,11 +336,9 @@ export default function Home() {
 
   async function generateClientID() {
     const year = new Date().getFullYear()
-    const { data: allClients } = await supabase.from('clients').select('id').ilike('id', `IMM-${year}-%`)
     const regex = new RegExp(`^IMM-${year}-(\\d{4})$`)
     let maxNum = 0
-    const clientList = allClients || clients
-    clientList.forEach(c => {
+    clients.forEach(c => {
       const m = String(c.id || "").match(regex)
       if (m) maxNum = Math.max(maxNum, Number(m[1]))
     })
