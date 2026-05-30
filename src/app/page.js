@@ -12,7 +12,7 @@ const MOCK_DATA = [
   { id: "IMM-2025-0005", client_name: "陈七", agent: "Ming", visa_type: "Subclass 143 - Contributory Parent", source: "Referral", status: "Enquiry", lodgement_date: "", decision_date: "", service_fee: 8000, payment_status: "Unpaid", paid_at: null, notes: "初步咨询，等待材料清单", is_urgent: false, created_at: "2025-03-20T14:00:00Z" }
 ]
 
-const USE_MOCK = true  // 设置为 true 使用 mock 数据，不连接 Supabase
+const USE_MOCK = false  // 设置为 true 使用 mock 数据，false 连接 Supabase
 
 // ==================== 常量配置 ====================
 const STATUSES = [
