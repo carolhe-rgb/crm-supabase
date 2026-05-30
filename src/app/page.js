@@ -3,53 +3,95 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
-const STATUSES = ["Lead", "Consultation", "Applied", "Offer", "Deposit Paid", "Enrolled", "Lost"]
-const SOURCES = ["Referral", "Xiaohongshu", "Wechat", "Walk-in", "Website", "Friend", "Other"]
-const COUNSELLORS = ["David", "Ming", "Jett"]
-const BONUS_STATUSES = ["Unpaid", "Ready for Bonus", "Paid"]
+// ==================== 常量配置 ====================
+const STATUSES = [
+  "Enquiry", 
+  "Consultation", 
+  "Document Collection", 
+  "Ready to Lodge", 
+  "Lodged", 
+  "Under Review", 
+  "Further Information", 
+  "Decision Made", 
+  "Granted", 
+  "Refused", 
+  "Withdrawn", 
+  "Appeal"
+]
 
-// 简单的密码验证
+const VISA_TYPES = [
+  "Subclass 500 - Student",
+  "Subclass 189 - Skilled Independent",
+  "Subclass 190 - Skilled Nominated",
+  "Subclass 491 - Skilled Regional",
+  "Subclass 482 - Temporary Skill Shortage",
+  "Subclass 186 - Employer Nomination",
+  "Subclass 820/801 - Partner Onshore",
+  "Subclass 309/100 - Partner Offshore",
+  "Subclass 143 - Contributory Parent",
+  "Subclass 485 - Temporary Graduate",
+  "Subclass 600 - Visitor",
+  "Subclass 417/462 - Working Holiday",
+  "Other"
+]
+
+const SOURCES = [
+  "Referral", 
+  "WeChat", 
+  "Xiaohongshu",
+  "Walk-in", 
+  "Website", 
+  "Google/Search",
+  "Social Media",
+  "Previous Client",
+  "Other"
+]
+
+const AGENTS = ["David", "Ming", "Jett"]
+
+const PAYMENT_STATUSES = ["Unpaid", "Deposit Paid", "Partially Paid", "Fully Paid", "Refunded"]
+
 function verifyLogin(name, password) {
   if (name === "Manager" && password === "admin123") {
-    return { role: "manager", counsellor: null }
+    return { role: "manager", agent: null }
   }
-  // 顧問密碼
-  const counsellorPasswords = {
+  const agentPasswords = {
     "David": "ozsky2022",
     "Ming": "ozsky0722",
     "Jett": "Ozsky2025"
   }
-  if (COUNSELLORS.includes(name) && counsellorPasswords[name] === password) {
-    return { role: "counsellor", counsellor: name }
+  if (AGENTS.includes(name) && agentPasswords[name] === password) {
+    return { role: "agent", agent: name }
   }
   return null
 }
 
 export default function Home() {
-  // 登录状态
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loginForm, setLoginForm] = useState({ name: "", password: "" })
   const [loginError, setLoginError] = useState("")
-
-  // 用户信息
-  const [user, setUser] = useState({ role: "", counsellor: "" })
-
-  // CRM 数据
-  const [students, setStudents] = useState([])
-  const [settings] = useState({ defaultBonus: 500, bonusOptions: [250, 500] })
+  const [user, setUser] = useState({ role: "", agent: "" })
+  const [clients, setClients] = useState([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState("students")
+  const [activeTab, setActiveTab] = useState("clients")
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
-  const [filters, setFilters] = useState({ search: "", status: "All", source: "All", year: "All", bonusStatus: "All" })
-
-  const [formData, setFormData] = useState({
-    id: "", studentName: "", counsellor: "", school: "", course: "",
-    source: "Referral", status: "Lead", intakeDate: "", visaExpiryDate: "", tuition: "",
-    bonus: 500, notes: "", isUrgent: false
+  const [filters, setFilters] = useState({ 
+    search: "", 
+    status: "All", 
+    source: "All", 
+    visaType: "All",
+    year: "All", 
+    paymentStatus: "All" 
   })
 
-  // 检查本地存储的登录状态
+  const [formData, setFormData] = useState({
+    id: "", clientName: "", agent: "", visaType: "",
+    source: "Referral", status: "Enquiry", lodgementDate: "", 
+    decisionDate: "", serviceFee: "", paymentStatus: "Unpaid",
+    notes: "", isUrgent: false
+  })
+
   useEffect(() => {
     const savedUser = localStorage.getItem("crm_user")
     if (savedUser) {
@@ -59,7 +101,6 @@ export default function Home() {
     }
   }, [])
 
-  // 登录处理
   function handleLogin(e) {
     e.preventDefault()
     const result = verifyLogin(loginForm.name, loginForm.password)
@@ -73,14 +114,12 @@ export default function Home() {
     }
   }
 
-  // 登出
   function handleLogout() {
     setIsLoggedIn(false)
-    setUser({ role: "", counsellor: "" })
+    setUser({ role: "", agent: "" })
     localStorage.removeItem("crm_user")
   }
 
-  // 加载数据
   useEffect(() => {
     if (isLoggedIn) {
       loadData()
@@ -90,169 +129,100 @@ export default function Home() {
   async function loadData() {
     setLoading(true)
     const { data, error } = await supabase
-      .from('students')
+      .from('clients')
       .select('*')
       .order('created_at', { ascending: false })
 
     if (!error) {
-      // 根据权限过滤数据
       let filtered = data || []
-      if (user.role === "counsellor") {
-        filtered = filtered.filter(s => s.counsellor === user.counsellor)
+      if (user.role === "agent") {
+        filtered = filtered.filter(c => c.agent === user.agent)
       }
-      setStudents(filtered)
+      setClients(filtered)
     }
     setLoading(false)
   }
 
-  async function saveStudent(student) {
-    const old = editingId ? students.find(s => s.id === editingId) : null
-
-    // 顾问只能保存自己的学生
-    const saveCounsellor = user.role === "manager"
-      ? student.counsellor
-      : user.counsellor
-
-    // 如果狀態為 Enrolled 或 Lost，自動取消緊急標記
-    const shouldCancelUrgent = student.status === "Enrolled" || student.status === "Lost"
-    const finalIsUrgent = shouldCancelUrgent ? false : (student.isUrgent || false)
+  async function saveClient(client) {
+    const old = editingId ? clients.find(c => c.id === editingId) : null
+    const saveAgent = user.role === "manager" ? client.agent : user.agent
+    const shouldCancelUrgent = ["Granted", "Refused", "Withdrawn"].includes(client.status)
+    const finalIsUrgent = shouldCancelUrgent ? false : (client.isUrgent || false)
 
     const payload = {
-      id: student.id,
-      student_name: student.studentName,
-      counsellor: saveCounsellor,
-      school: student.school,
-      course: student.course,
-      source: student.source,
-      status: student.status,
-      intake_date: student.intakeDate || null,
-      visa_expiry_date: student.visaExpiryDate || null,
-      tuition: Number(student.tuition || 0),
-      bonus: Number(student.bonus || settings.defaultBonus),
-      bonus_status: old?.bonus_status || "Unpaid",
+      id: client.id,
+      client_name: client.clientName,
+      agent: saveAgent,
+      visa_type: client.visaType,
+      source: client.source,
+      status: client.status,
+      lodgement_date: client.lodgementDate || null,
+      decision_date: client.decisionDate || null,
+      service_fee: Number(client.serviceFee || 0),
+      payment_status: old?.payment_status || "Unpaid",
       paid_at: old?.paid_at || null,
-      notes: student.notes,
+      notes: client.notes,
       is_urgent: finalIsUrgent
     }
 
-    const { error } = await supabase
-      .from('students')
-      .upsert(payload, { onConflict: 'id' })
-
+    const { error } = await supabase.from('clients').upsert(payload, { onConflict: 'id' })
     if (!error) {
       await loadData()
       setModalOpen(false)
     }
   }
 
-  async function deleteStudent(id) {
+  async function deleteClient(id) {
     if (!confirm('确定删除？')) return
-    await supabase.from('students').delete().eq('id', id)
+    await supabase.from('clients').delete().eq('id', id)
     await loadData()
   }
 
-  // ==================== 報表導出功能 ====================
   function exportToCSV(data, filename) {
-    if (data.length === 0) {
-      alert('沒有數據可導出')
-      return
-    }
-
-    const headers = [
-      'ID', 'Student Name', 'Counsellor', 'School', 'Course',
-      'Source', 'Status', 'Intake Date', 'Visa Expiry Date', 'Tuition (AUD)',
-      'Bonus', 'Bonus Status', 'Paid At', 'Notes', 'Is Urgent', 'Created At'
-    ]
-
-    const rows = data.map(s => [
-      s.id,
-      s.student_name,
-      s.counsellor,
-      s.school,
-      s.course,
-      s.source,
-      s.status,
-      s.intake_date || '',
-      s.visa_expiry_date || '',
-      s.tuition || 0,
-      s.bonus || 500,
-      s.bonus_status || 'Unpaid',
-      s.paid_at ? fmtDateTime(s.paid_at) : '',
-      (s.notes || '').replace(/"/g, '""'),
-      s.is_urgent ? 'Yes' : 'No',
-      fmtDateTime(s.created_at)
+    if (data.length === 0) { alert('没有数据可导出'); return }
+    const headers = ['ID', 'Client Name', 'Agent', 'Visa Type', 'Source', 'Status',
+      'Lodgement Date', 'Decision Date', 'Service Fee (AUD)',
+      'Payment Status', 'Paid At', 'Notes', 'Is Urgent', 'Created At']
+    const rows = data.map(c => [
+      c.id, c.client_name, c.agent, c.visa_type, c.source, c.status,
+      c.lodgement_date || '', c.decision_date || '', c.service_fee || 0,
+      c.payment_status || 'Unpaid', c.paid_at ? fmtDateTime(c.paid_at) : '',
+      (c.notes || '').replace(/"/g, '""'), c.is_urgent ? 'Yes' : 'No',
+      fmtDateTime(c.created_at)
     ])
-
-    const csv = [headers, ...rows]
-      .map(row => row.map(cell => {
-        const str = String(cell || '')
-        if (str.includes(',') || str.includes('\n') || str.includes('"')) {
-          return `"${str.replace(/"/g, '""')}"`
-        }
-        return str
-      }).join(','))
-      .join('\n')
-
+    const csv = [headers, ...rows].map(row => row.map(cell => {
+      const str = String(cell || '')
+      if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+        return `"${str.replace(/"/g, '""')}"`
+      }
+      return str
+    }).join(',')).join('\n')
     downloadFile(csv, `${filename}.csv`, 'text/csv;charset=utf-8;')
   }
 
   function exportToExcel(data, filename) {
-    if (data.length === 0) {
-      alert('沒有數據可導出')
-      return
-    }
-
-    // 創建 HTML 表格用於 Excel 導出
-    const headers = [
-      'ID', 'Student Name', 'Counsellor', 'School', 'Course',
-      'Source', 'Status', 'Intake Date', 'Visa Expiry Date', 'Tuition (AUD)',
-      'Bonus', 'Bonus Status', 'Paid At', 'Notes', 'Created At'
-    ]
-
-    const rows = data.map(s => `
-      <tr>
-        <td>${s.id}</td>
-        <td>${s.student_name}</td>
-        <td>${s.counsellor}</td>
-        <td>${s.school}</td>
-        <td>${s.course}</td>
-        <td>${s.source}</td>
-        <td>${s.status}</td>
-        <td>${s.intake_date || ''}</td>
-        <td>${s.visa_expiry_date || ''}</td>
-        <td>${s.tuition || 0}</td>
-        <td>${s.bonus || 500}</td>
-        <td>${s.bonus_status || 'Unpaid'}</td>
-        <td>${s.paid_at ? fmtDateTime(s.paid_at) : ''}</td>
-        <td>${(s.notes || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
-        <td>${fmtDateTime(s.created_at)}</td>
-      </tr>
-    `).join('')
-
-    const html = `
-      <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-      <head>
-        <meta charset="UTF-8">
-        <style>
-          table { border-collapse: collapse; }
-          th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-          th { background-color: #2563eb; color: white; font-weight: bold; }
-          tr:nth-child(even) { background-color: #f8fafc; }
-        </style>
-      </head>
-      <body>
-        <table>
-          <thead>
-            <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
-          </thead>
-          <tbody>
-            ${rows}
-          </tbody>
-        </table>
-      </body>
-      </html>
-    `
-
+    if (data.length === 0) { alert('没有数据可导出'); return }
+    const headers = ['ID', 'Client Name', 'Agent', 'Visa Type', 'Source', 'Status',
+      'Lodgement Date', 'Decision Date', 'Service Fee (AUD)',
+      'Payment Status', 'Paid At', 'Notes', 'Created At']
+    const rows = data.map(c => `<tr>
+      <td>${c.id}</td><td>${c.client_name}</td><td>${c.agent}</td>
+      <td>${c.visa_type || ''}</td><td>${c.source}</td><td>${c.status}</td>
+      <td>${c.lodgement_date || ''}</td><td>${c.decision_date || ''}</td>
+      <td>${c.service_fee || 0}</td><td>${c.payment_status || 'Unpaid'}</td>
+      <td>${c.paid_at ? fmtDateTime(c.paid_at) : ''}</td>
+      <td>${(c.notes || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
+      <td>${fmtDateTime(c.created_at)}</td>
+    </tr>`).join('')
+    const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+      <head><meta charset="UTF-8"><style>
+        table { border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #2563eb; color: white; font-weight: bold; }
+        tr:nth-child(even) { background-color: #f8fafc; }
+      </style></head><body>
+      <table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${rows}</tbody></table></body></html>`
     downloadFile(html, `${filename}.xls`, 'application/vnd.ms-excel;charset=utf-8;')
   }
 
@@ -267,129 +237,67 @@ export default function Home() {
     URL.revokeObjectURL(link.href)
   }
 
-  function getExportData() {
-    // 根據當前篩選條件導出數據
-    return visibleStudents
-  }
-
-  function getExportFilename() {
-    const date = new Date().toISOString().split('T')[0]
-    const activeFilters = []
-    if (filters.status !== 'All') activeFilters.push(filters.status)
-    if (filters.year !== 'All') activeFilters.push(filters.year)
-    if (filters.bonusStatus !== 'All') activeFilters.push(filters.bonusStatus)
-    const filterStr = activeFilters.length > 0 ? `-${activeFilters.join('-')}` : ''
-    return `CRM-Report${filterStr}-${date}`
-  }
-
-  async function markReady(id) {
-    const s = students.find(x => x.id === id)
-    // 顾问只能操作自己的学生
-    if (user.role === "counsellor" && s.counsellor !== user.counsellor) return
-
-    const newStatus = s.bonus_status === "Ready for Bonus" ? "Unpaid" : "Ready for Bonus"
-    await supabase.from('students').update({
-      bonus_status: newStatus,
-      paid_at: null
+  async function markPaymentStatus(id, newStatus) {
+    const c = clients.find(x => x.id === id)
+    if (user.role === "agent" && c.agent !== user.agent) return
+    await supabase.from('clients').update({
+      payment_status: newStatus,
+      paid_at: newStatus === "Fully Paid" ? new Date().toISOString() : null
     }).eq('id', id)
     await loadData()
   }
 
-  async function markPaid(id) {
-    const s = students.find(x => x.id === id)
-    const newStatus = s.bonus_status === "Paid" ? "Unpaid" : "Paid"
-    await supabase.from('students').update({
-      bonus_status: newStatus,
-      paid_at: newStatus === "Paid" ? new Date().toISOString() : null
-    }).eq('id', id)
-    await loadData()
-  }
-
-  // ==================== 緊急標記功能 ====================
   async function toggleUrgent(id) {
-    const s = students.find(x => x.id === id)
-    // 顧問只能標記自己的學生
-    if (user.role === "counsellor" && s.counsellor !== user.counsellor) {
-      alert("您只能標記自己的學生")
-      return
-    }
-
-    const newUrgentStatus = !s.is_urgent
-    console.log('切換緊急狀態:', id, '新狀態:', newUrgentStatus)
-    
-    const { error } = await supabase.from('students').update({
-      is_urgent: newUrgentStatus
-    }).eq('id', id)
-    
-    if (error) {
-      console.error('更新緊急狀態失敗:', error)
-      alert('更新失敗: ' + error.message)
-      return
-    }
-    
-    console.log('更新成功')
+    const c = clients.find(x => x.id === id)
+    if (user.role === "agent" && c.agent !== user.agent) { alert("您只能标记自己的客户"); return }
+    const { error } = await supabase.from('clients').update({ is_urgent: !c.is_urgent }).eq('id', id)
+    if (error) { alert('更新失败: ' + error.message); return }
     await loadData()
   }
 
-  function generateStudentID() {
+  async function generateClientID() {
     const year = new Date().getFullYear()
-    const regex = new RegExp(`^STU-${year}-(\\d{4})$`)
+    const { data: allClients } = await supabase.from('clients').select('id').ilike('id', `IMM-${year}-%`)
+    const regex = new RegExp(`^IMM-${year}-(\\d{4})$`)
     let maxNum = 0
-    students.forEach(s => {
-      const m = String(s.id || "").match(regex)
+    const clientList = allClients || clients
+    clientList.forEach(c => {
+      const m = String(c.id || "").match(regex)
       if (m) maxNum = Math.max(maxNum, Number(m[1]))
     })
-    return `STU-${year}-${String(maxNum + 1).padStart(4, "0")}`
+    return `IMM-${year}-${String(maxNum + 1).padStart(4, "0")}`
   }
 
-  function getRecordYear(s) {
-    if (s.id && /^STU-\d{4}-\d{4}$/.test(s.id)) return s.id.slice(4, 8)
-    if (s.intake_date) return String(new Date(s.intake_date).getFullYear())
+  function getRecordYear(c) {
+    if (c.id && /^IMM-\d{4}-\d{4}$/.test(c.id)) return c.id.slice(4, 8)
+    if (c.lodgement_date) return String(new Date(c.lodgement_date).getFullYear())
     return "Unknown"
   }
 
-  function openModal(editId = null) {
+  async function openModal(editId = null) {
     setEditingId(editId)
     if (editId) {
-      const s = students.find(x => x.id === editId)
+      const c = clients.find(x => x.id === editId)
       setFormData({
-        id: s.id,
-        studentName: s.student_name,
-        counsellor: s.counsellor,
-        school: s.school,
-        course: s.course,
-        source: s.source,
-        status: s.status,
-        intakeDate: s.intake_date || "",
-        visaExpiryDate: s.visa_expiry_date || "",
-        tuition: s.tuition,
-        bonus: s.bonus,
-        notes: s.notes || "",
-        isUrgent: s.is_urgent || false
+        id: c.id, clientName: c.client_name, agent: c.agent,
+        visaType: c.visa_type || "", source: c.source, status: c.status,
+        lodgementDate: c.lodgement_date || "", decisionDate: c.decision_date || "",
+        serviceFee: c.service_fee, paymentStatus: c.payment_status,
+        notes: c.notes || "", isUrgent: c.is_urgent || false
       })
     } else {
+      const newId = await generateClientID()
       setFormData({
-        id: generateStudentID(),
-        studentName: "",
-        counsellor: user.role === "manager" ? COUNSELLORS[0] : user.counsellor,
-        school: "",
-        course: "",
-        source: "Referral",
-        status: "Lead",
-        intakeDate: "",
-        visaExpiryDate: "",
-        tuition: "",
-        bonus: settings.defaultBonus,
-        notes: "",
-        isUrgent: false
+        id: newId, clientName: "", agent: user.role === "manager" ? AGENTS[0] : user.agent,
+        visaType: "", source: "Referral", status: "Enquiry",
+        lodgementDate: "", decisionDate: "", serviceFee: "",
+        paymentStatus: "Unpaid", notes: "", isUrgent: false
       })
     }
     setModalOpen(true)
   }
 
-  async function handleSave() {
-    await saveStudent(formData)
-  }
+  async function handleSave() { await saveClient(formData) }
 
   function currency(n) {
     return new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 }).format(Number(n || 0))
@@ -402,181 +310,139 @@ export default function Home() {
     return new Intl.DateTimeFormat("en-AU", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(d)
   }
 
-  // 过滤数据
-  const visibleStudents = students.filter(s => {
-    if (filters.search && !(
-      (s.student_name || "").toLowerCase().includes(filters.search.toLowerCase()) ||
-      (s.school || "").toLowerCase().includes(filters.search.toLowerCase()) ||
-      (s.course || "").toLowerCase().includes(filters.search.toLowerCase()) ||
-      (s.id || "").toLowerCase().includes(filters.search.toLowerCase())
-    )) return false
-    if (filters.status !== "All" && s.status !== filters.status) return false
-    if (filters.source !== "All" && s.source !== filters.source) return false
-    if (filters.year !== "All" && getRecordYear(s) !== filters.year) return false
-    if (filters.bonusStatus !== "All" && s.bonus_status !== filters.bonusStatus) return false
+  const visibleClients = clients.filter(c => {
+    if (filters.search && !((c.client_name || "").toLowerCase().includes(filters.search.toLowerCase()) ||
+      (c.visa_type || "").toLowerCase().includes(filters.search.toLowerCase()) ||
+      (c.id || "").toLowerCase().includes(filters.search.toLowerCase()) ||
+      (c.notes || "").toLowerCase().includes(filters.search.toLowerCase()))) return false
+    if (filters.status !== "All" && c.status !== filters.status) return false
+    if (filters.source !== "All" && c.source !== filters.source) return false
+    if (filters.visaType !== "All" && c.visa_type !== filters.visaType) return false
+    if (filters.year !== "All" && getRecordYear(c) !== filters.year) return false
+    if (filters.paymentStatus !== "All" && c.payment_status !== filters.paymentStatus) return false
     return true
   })
 
-  const enrolled = visibleStudents.filter(s => s.status === "Enrolled")
-  const pipeline = visibleStudents.filter(s => !["Enrolled", "Lost"].includes(s.status))
-  const totalBonus = enrolled.reduce((a, s) => a + (s.bonus || settings.defaultBonus), 0)
-  const paidBonus = enrolled.filter(s => s.bonus_status === "Paid").reduce((a, s) => a + (s.bonus || settings.defaultBonus), 0)
-  const years = [...new Set(students.map(getRecordYear))].sort((a, b) => String(b).localeCompare(String(a)))
+  const granted = visibleClients.filter(c => c.status === "Granted")
+  const active = visibleClients.filter(c => !["Granted", "Refused", "Withdrawn"].includes(c.status))
+  const totalFee = visibleClients.reduce((a, c) => a + (c.service_fee || 0), 0)
+  const paidFee = visibleClients.filter(c => c.payment_status === "Fully Paid").reduce((a, c) => a + (c.service_fee || 0), 0)
+  const years = [...new Set(clients.map(getRecordYear))].sort((a, b) => String(b).localeCompare(String(a)))
 
-  // ==================== 登录页面 ====================
+  function getStatusColor(status) {
+    const colors = {
+      "Granted": "#10b981", "Refused": "#ef4444", "Withdrawn": "#6b7280",
+      "Enquiry": "#f59e0b", "Consultation": "#3b82f6", "Document Collection": "#8b5cf6",
+      "Ready to Lodge": "#06b6d4", "Lodged": "#6366f1", "Under Review": "#0ea5e9",
+      "Further Information": "#f97316", "Decision Made": "#14b8a6", "Appeal": "#ec4899"
+    }
+    return colors[status] || "#64748b"
+  }
+
   if (!isLoggedIn) {
     return (
       <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
         <div className="card" style={{ maxWidth: '400px', width: '100%', padding: '32px' }}>
-          <h1 style={{ textAlign: 'center', marginBottom: '8px' }}>留学招生 CRM</h1>
-          <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '24px' }}>请登录</p>
-
+          <h1 style={{ textAlign: 'center', marginBottom: '8px' }}>移民代理 CRM</h1>
+          <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '24px' }}>OzSky Immigration</p>
           <form onSubmit={handleLogin}>
             <div className="field" style={{ marginBottom: '16px' }}>
               <label>用户名</label>
-              <select
-                value={loginForm.name}
-                onChange={e => setLoginForm({...loginForm, name: e.target.value})}
-                style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
-                required
-              >
+              <select value={loginForm.name} onChange={e => setLoginForm({...loginForm, name: e.target.value})} style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0' }} required>
                 <option value="">请选择</option>
                 <option value="Manager">Manager</option>
-                {COUNSELLORS.map(c => <option key={c} value={c}>{c}</option>)}
+                {AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
               </select>
             </div>
-
             <div className="field" style={{ marginBottom: '24px' }}>
               <label>密码</label>
-              <input
-                type="password"
-                placeholder="输入密码"
-                value={loginForm.password}
-                onChange={e => setLoginForm({...loginForm, password: e.target.value})}
-                style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
-                required
-              />
+              <input type="password" placeholder="输入密码" value={loginForm.password} onChange={e => setLoginForm({...loginForm, password: e.target.value})} style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0' }} required />
             </div>
-
-            {loginError && (
-              <div style={{ color: '#dc2626', marginBottom: '16px', textAlign: 'center' }}>
-                {loginError}
-              </div>
-            )}
-
-            <button type="submit" className="btn" style={{ width: '100%' }}>
-              登录
-            </button>
+            {loginError && <div style={{ color: '#dc2626', marginBottom: '16px', textAlign: 'center' }}>{loginError}</div>}
+            <button type="submit" className="btn" style={{ width: '100%' }}>登录</button>
           </form>
         </div>
       </div>
     )
   }
 
-  // ==================== CRM 主页面 ====================
   if (loading) return <div className="page"><p>加载中...</p></div>
 
   return (
     <div className="page">
-      {/* Header */}
       <div className="header card">
         <div>
-          <h1>留学招生 CRM</h1>
-          <p>{user.role === "manager" ? "管理员视图 - 查看全部数据" : `顾问视图 - ${user.counsellor}`}</p>
+          <h1>移民代理 CRM</h1>
+          <p>{user.role === "manager" ? "管理员视图 - 查看全部数据" : `代理视图 - ${user.agent}`}</p>
         </div>
         <div className="header-actions">
           <div style={{ textAlign: 'right', marginRight: '16px' }}>
-            <div style={{ fontWeight: 600 }}>{user.role === "manager" ? "Manager" : user.counsellor}</div>
-            <button onClick={handleLogout} style={{ fontSize: '12px', color: '#64748b', background: 'none', border: 'none', cursor: 'pointer' }}>
-              退出登录
-            </button>
+            <div style={{ fontWeight: 600 }}>{user.role === "manager" ? "Manager" : user.agent}</div>
+            <button onClick={handleLogout} style={{ fontSize: '12px', color: '#64748b', background: 'none', border: 'none', cursor: 'pointer' }}>退出登录</button>
           </div>
-          <button className="btn" onClick={() => openModal()}>新增学生</button>
+          <button className="btn" onClick={() => openModal()}>新增客户</button>
         </div>
       </div>
 
-      {/* KPIs */}
       <div className="kpis">
         <div className="card kpi">
-          <div className="kpi-title">学生总数</div>
-          <div className="kpi-value">{visibleStudents.length}</div>
-          <div className="kpi-sub">{user.role === "manager" ? "全公司数据" : "我的学生"}</div>
+          <div className="kpi-title">客户总数</div>
+          <div className="kpi-value">{visibleClients.length}</div>
+          <div className="kpi-sub">{user.role === "manager" ? "全公司数据" : "我的客户"}</div>
         </div>
         <div className="card kpi">
-          <div className="kpi-title">已入学</div>
-          <div className="kpi-value">{enrolled.length}</div>
-          <div className="kpi-sub">转化率 {visibleStudents.length ? Math.round(enrolled.length / visibleStudents.length * 100) : 0}%</div>
+          <div className="kpi-title">已下签</div>
+          <div className="kpi-value" style={{ color: '#10b981' }}>{granted.length}</div>
+          <div className="kpi-sub">成功率 {visibleClients.length ? Math.round(granted.length / visibleClients.length * 100) : 0}%</div>
         </div>
         <div className="card kpi">
-          <div className="kpi-title">跟进中</div>
-          <div className="kpi-value">{pipeline.length}</div>
-          <div className="kpi-sub">未完成的 pipeline</div>
+          <div className="kpi-title">处理中</div>
+          <div className="kpi-value">{active.length}</div>
+          <div className="kpi-sub">活跃案件</div>
         </div>
         <div className="card kpi">
-          <div className="kpi-title">总 Bonus</div>
-          <div className="kpi-value">{currency(totalBonus)}</div>
-          <div className="kpi-sub">已支付 {currency(paidBonus)}</div>
+          <div className="kpi-title">服务费总额</div>
+          <div className="kpi-value">{currency(totalFee)}</div>
+          <div className="kpi-sub">已收款 {currency(paidFee)}</div>
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="tabs">
-        <button className={`tab ${activeTab === "students" ? "active" : ""}`} onClick={() => setActiveTab("students")}>Students</button>
-        {user.role === "manager" && (
-          <button className={`tab ${activeTab === "dashboard" ? "active" : ""}`} onClick={() => setActiveTab("dashboard")}>Dashboard</button>
-        )}
+        <button className={`tab ${activeTab === "clients" ? "active" : ""}`} onClick={() => setActiveTab("clients")}>Clients</button>
+        {user.role === "manager" && <button className={`tab ${activeTab === "dashboard" ? "active" : ""}`} onClick={() => setActiveTab("dashboard")}>Dashboard</button>}
         <button className={`tab ${activeTab === "settings" ? "active" : ""}`} onClick={() => setActiveTab("settings")}>Settings</button>
       </div>
 
-      {/* Students Tab */}
-      {activeTab === "students" && (
+      {activeTab === "clients" && (
         <div className="card">
           <div className="section-head">
-            <h2>学生管理</h2>
-            <div className="filters filters-5">
-              <input placeholder="搜索学生 / 学校 / 课程 / ID"
-                value={filters.search}
-                onChange={e => setFilters({...filters, search: e.target.value})} />
+            <h2>客户管理</h2>
+            <div className="filters" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
+              <input placeholder="搜索客户 / 签证类型 / ID" value={filters.search} onChange={e => setFilters({...filters, search: e.target.value})} />
               <select value={filters.status} onChange={e => setFilters({...filters, status: e.target.value})}>
-                <option value="All">All Status</option>
-                {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                <option value="All">All Status</option>{STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+              <select value={filters.visaType} onChange={e => setFilters({...filters, visaType: e.target.value})}>
+                <option value="All">All Visa Types</option>{VISA_TYPES.map(v => <option key={v} value={v}>{v}</option>)}
               </select>
               <select value={filters.source} onChange={e => setFilters({...filters, source: e.target.value})}>
-                <option value="All">All Sources</option>
-                {SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
+                <option value="All">All Sources</option>{SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
-              <select value={filters.bonusStatus} onChange={e => setFilters({...filters, bonusStatus: e.target.value})}>
-                <option value="All">Bonus Status</option>
-                {BONUS_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+              <select value={filters.paymentStatus} onChange={e => setFilters({...filters, paymentStatus: e.target.value})}>
+                <option value="All">Payment Status</option>{PAYMENT_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
               <select value={filters.year} onChange={e => setFilters({...filters, year: e.target.value})}>
-                <option value="All">All Years</option>
-                {years.map(y => <option key={y} value={y}>{y}</option>)}
+                <option value="All">All Years</option>{years.map(y => <option key={y} value={y}>{y}</option>)}
               </select>
             </div>
           </div>
 
-          {/* Manager 導出按鈕 */}
           {user.role === "manager" && (
             <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', padding: '12px', background: '#f8fafc', borderRadius: '12px', alignItems: 'center' }}>
-              <span style={{ fontWeight: 600, color: '#475569' }}>📊 報表導出:</span>
-              <button
-                className="btn secondary"
-                onClick={() => exportToCSV(getExportData(), getExportFilename())}
-                style={{ padding: '8px 14px', fontSize: '14px' }}
-              >
-                📄 導出 CSV
-              </button>
-              <button
-                className="btn secondary"
-                onClick={() => exportToExcel(getExportData(), getExportFilename())}
-                style={{ padding: '8px 14px', fontSize: '14px' }}
-              >
-                📑 導出 Excel
-              </button>
-              <span style={{ color: '#64748b', fontSize: '13px', marginLeft: 'auto' }}>
-                共 {visibleStudents.length} 條記錄
-              </span>
+              <span style={{ fontWeight: 600, color: '#475569' }}>📊 报表导出:</span>
+              <button className="btn secondary" onClick={() => exportToCSV(visibleClients, `CRM-Immigration-${new Date().toISOString().split('T')[0]}`)} style={{ padding: '8px 14px', fontSize: '14px' }}>📄 导出 CSV</button>
+              <button className="btn secondary" onClick={() => exportToExcel(visibleClients, `CRM-Immigration-${new Date().toISOString().split('T')[0]}`)} style={{ padding: '8px 14px', fontSize: '14px' }}>📑 导出 Excel</button>
+              <span style={{ color: '#64748b', fontSize: '13px', marginLeft: 'auto' }}>共 {visibleClients.length} 条记录</span>
             </div>
           )}
 
@@ -585,112 +451,66 @@ export default function Home() {
               <thead>
                 <tr>
                   <th style={{minWidth: '130px'}}>ID</th>
-                  <th style={{minWidth: '140px'}}>Student</th>
-                  {user.role === "manager" && <th style={{minWidth: '80px'}}>顾问</th>}
-                  <th style={{minWidth: '180px'}}>School / Course</th>
+                  <th style={{minWidth: '140px'}}>Client</th>
+                  {user.role === "manager" && <th style={{minWidth: '80px'}}>Agent</th>}
+                  <th style={{minWidth: '200px'}}>Visa Type</th>
                   <th style={{minWidth: '100px'}}>Status</th>
-                  <th style={{minWidth: '100px'}}>Dates</th>
-                  <th style={{minWidth: '120px'}}>Bonus</th>
+                  <th style={{minWidth: '120px'}}>Dates</th>
+                  <th style={{minWidth: '120px'}}>Fee / Payment</th>
                   <th style={{minWidth: '150px'}}>Notes</th>
-                  <th style={{minWidth: '180px'}}>Actions</th>
+                  <th style={{minWidth: '200px'}}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {visibleStudents.map(s => (
-                  <tr key={s.id}>
+                {visibleClients.map(c => (
+                  <tr key={c.id}>
                     <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{
-                          color: !!s.is_urgent ? '#dc2626' : 'inherit',
-                          fontWeight: !!s.is_urgent ? '700' : '500',
-                          background: !!s.is_urgent ? '#fef2f2' : 'transparent',
-                          padding: !!s.is_urgent ? '2px 6px' : '0',
-                          borderRadius: !!s.is_urgent ? '4px' : '0',
-                          border: !!s.is_urgent ? '1px solid #fecaca' : 'none'
-                        }}>
-                          {s.id}
-                          {!!s.is_urgent && ' 🔥'}
-                        </span>
-                      </div>
+                      <span style={{ color: !!c.is_urgent ? '#dc2626' : 'inherit', fontWeight: !!c.is_urgent ? '700' : '500', background: !!c.is_urgent ? '#fef2f2' : 'transparent', padding: !!c.is_urgent ? '2px 6px' : '0', borderRadius: !!c.is_urgent ? '4px' : '0', border: !!c.is_urgent ? '1px solid #fecaca' : 'none' }}>
+                        {c.id}{!!c.is_urgent && ' 🔥'}
+                      </span>
                     </td>
                     <td>
-                      <div><strong>{s.student_name}</strong></div>
-                      <div style={{color:"#64748b",fontSize:12}}>{s.source}</div>
+                      <div><strong>{c.client_name}</strong></div>
+                      <div style={{color:"#64748b",fontSize:12}}>{c.source}</div>
                     </td>
-                    {user.role === "manager" && <td>{s.counsellor}</td>}
+                    {user.role === "manager" && <td>{c.agent}</td>}
                     <td>
-                      <div>{s.school}</div>
-                      <div style={{color:"#64748b",fontSize:12}}>{s.course}</div>
+                      <div>{c.visa_type || "-"}</div>
+                      <div style={{color:"#64748b",fontSize:12}}>{c.lodgement_date ? `Lodged: ${c.lodgement_date}` : 'Not lodged'}</div>
                     </td>
-                    <td><span className={`badge ${s.status === "Enrolled" ? "ready" : ""}`}>{s.status}</span></td>
+                    <td>
+                      <span style={{ display: 'inline-block', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, backgroundColor: getStatusColor(c.status) + '20', color: getStatusColor(c.status) }}>{c.status}</span>
+                    </td>
                     <td>
                       <div style={{fontSize: '12px', lineHeight: '1.5'}}>
-                        <div>
-                          <span style={{color: '#64748b'}}>入學:</span> {s.intake_date || "-"}
-                        </div>
-                        <div>
-                          <span style={{color: '#64748b'}}>簽證:</span>{' '}
-                          {s.visa_expiry_date ? (
-                            <span style={{
-                              color: new Date(s.visa_expiry_date) < new Date(Date.now() + 30*24*60*60*1000) ? '#dc2626' : 'inherit',
-                              fontWeight: new Date(s.visa_expiry_date) < new Date(Date.now() + 30*24*60*60*1000) ? '600' : '400'
-                            }}>
-                              {s.visa_expiry_date}
-                              {new Date(s.visa_expiry_date) < new Date(Date.now() + 30*24*60*60*1000) && '⚠️'}
-                            </span>
-                          ) : (
-                            "-"
-                          )}
-                        </div>
+                        <div><span style={{color: '#64748b'}}>递交:</span> {c.lodgement_date || "-"}</div>
+                        <div><span style={{color: '#64748b'}}>决定:</span> {c.decision_date ? <span style={{ color: new Date(c.decision_date) < new Date() && c.status === 'Under Review' ? '#dc2626' : 'inherit', fontWeight: new Date(c.decision_date) < new Date() && c.status === 'Under Review' ? '600' : '400' }}>{c.decision_date}{new Date(c.decision_date) < new Date() && c.status === 'Under Review' && ' ⚠️'}</span> : "-"}</div>
                       </div>
                     </td>
                     <td>
                       <div style={{fontSize: '13px'}}>
-                        <div>{currency(s.bonus)}</div>
+                        <div>{currency(c.service_fee)}</div>
                         <div style={{marginTop: '4px'}}>
-                          <span className={`badge ${s.bonus_status === "Paid" ? "paid" : s.bonus_status === "Ready for Bonus" ? "ready" : ""}`}>
-                            {s.bonus_status}
-                          </span>
+                          <span style={{ display: 'inline-block', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', backgroundColor: c.payment_status === 'Fully Paid' ? '#10b98120' : c.payment_status === 'Unpaid' ? '#ef444420' : '#f59e0b20', color: c.payment_status === 'Fully Paid' ? '#10b981' : c.payment_status === 'Unpaid' ? '#ef4444' : '#f59e0b' }}>{c.payment_status}</span>
                         </div>
                       </div>
                     </td>
                     <td>
                       <div style={{maxWidth: '200px', fontSize: '13px', color: '#475569', lineHeight: '1.4', whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}>
-                        {s.notes ? (
-                          s.notes.length > 100 ? s.notes.substring(0, 100) + '...' : s.notes
-                        ) : (
-                          <span style={{color: '#94a3b8'}}>-</span>
-                        )}
+                        {c.notes ? (c.notes.length > 100 ? c.notes.substring(0, 100) + '...' : c.notes) : <span style={{color: '#94a3b8'}}>-</span>}
                       </div>
                     </td>
                     <td>
                       <div className="action-group">
-                        {s.status === "Enrolled" && user.role === "counsellor" && s.bonus_status !== "Paid" && (
-                          <button className="small-btn primary" onClick={() => markReady(s.id)}>
-                            {s.bonus_status === "Ready for Bonus" ? "Undo Ready" : "Mark Ready"}
-                          </button>
+                        {user.role === "agent" && c.payment_status !== "Fully Paid" && (
+                          <button className="small-btn primary" onClick={() => markPaymentStatus(c.id, "Deposit Paid")}>Mark Deposit</button>
                         )}
-                        {s.status === "Enrolled" && user.role === "manager" && (
-                          <button className="small-btn primary" onClick={() => markPaid(s.id)}>
-                            {s.bonus_status === "Paid" ? "Undo Paid" : "Mark Paid"}
-                          </button>
-                        )}
-                        <button className="small-btn" onClick={() => openModal(s.id)}>Edit</button>
-                        <button
-                          className="small-btn"
-                          onClick={() => toggleUrgent(s.id)}
-                          style={{
-                            background: !!s.is_urgent ? '#fef2f2' : '#fff',
-                            borderColor: !!s.is_urgent ? '#ef4444' : '#e2e8f0',
-                            color: !!s.is_urgent ? '#dc2626' : '#64748b'
-                          }}
-                          title={!!s.is_urgent ? "取消緊急標記" : "標記為緊急"}
-                        >
-                          {!!s.is_urgent ? '🔥 取消緊急' : '標記緊急'}
-                        </button>
                         {user.role === "manager" && (
-                          <button className="small-btn danger" onClick={() => deleteStudent(s.id)}>Delete</button>
+                          <button className="small-btn primary" onClick={() => markPaymentStatus(c.id, c.payment_status === "Fully Paid" ? "Unpaid" : "Fully Paid")}>{c.payment_status === "Fully Paid" ? "Undo Paid" : "Mark Paid"}</button>
                         )}
+                        <button className="small-btn" onClick={() => openModal(c.id)}>Edit</button>
+                        <button className="small-btn" onClick={() => toggleUrgent(c.id)} style={{background: !!c.is_urgent ? '#fef2f2' : '#fff', borderColor: !!c.is_urgent ? '#ef4444' : '#e2e8f0', color: !!c.is_urgent ? '#dc2626' : '#64748b'}} title={!!c.is_urgent ? "取消紧急标记" : "标记为紧急"}>{!!c.is_urgent ? '🔥 取消紧急' : '标记紧急'}</button>
+                        {user.role === "manager" && <button className="small-btn danger" onClick={() => deleteClient(c.id)}>Delete</button>}
                       </div>
                     </td>
                   </tr>
@@ -701,140 +521,144 @@ export default function Home() {
         </div>
       )}
 
-      {/* Dashboard Tab (仅 Manager) */}
       {activeTab === "dashboard" && user.role === "manager" && (
         <>
-          {/* 導出按鈕區域 */}
           <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', padding: '12px', background: '#f8fafc', borderRadius: '12px', alignItems: 'center' }}>
-            <span style={{ fontWeight: 600, color: '#475569' }}>📊 全部數據導出:</span>
-            <button
-              className="btn secondary"
-              onClick={() => exportToCSV(students, `CRM-All-Data-${new Date().toISOString().split('T')[0]}`)}
-              style={{ padding: '8px 14px', fontSize: '14px' }}
-            >
-              📄 導出全部 CSV
-            </button>
-            <button
-              className="btn secondary"
-              onClick={() => exportToExcel(students, `CRM-All-Data-${new Date().toISOString().split('T')[0]}`)}
-              style={{ padding: '8px 14px', fontSize: '14px' }}
-            >
-              📑 導出全部 Excel
-            </button>
-            <span style={{ color: '#64748b', fontSize: '13px', marginLeft: 'auto' }}>
-              全部 {students.length} 條記錄
-            </span>
+            <span style={{ fontWeight: 600, color: '#475569' }}>📊 全部数据导出:</span>
+            <button className="btn secondary" onClick={() => exportToCSV(clients, `CRM-All-Data-${new Date().toISOString().split('T')[0]}`)} style={{ padding: '8px 14px', fontSize: '14px' }}>📄 导出全部 CSV</button>
+            <button className="btn secondary" onClick={() => exportToExcel(clients, `CRM-All-Data-${new Date().toISOString().split('T')[0]}`)} style={{ padding: '8px 14px', fontSize: '14px' }}>📑 导出全部 Excel</button>
+            <span style={{ color: '#64748b', fontSize: '13px', marginLeft: 'auto' }}>全部 {clients.length} 条记录</span>
           </div>
 
           <div className="dashboard-grid">
             <div className="card">
-              <h2>Pipeline overview</h2>
-            {STATUSES.map(st => {
-              const count = students.filter(s => s.status === st).length
-              const total = students.length || 1
-              const pct = Math.round(count / total * 100)
-              return (
-                <div className="pipeline-row" key={st}>
-                  <div style={{display:"flex",justifyContent:"space-between"}}>
-                    <span>{st}</span>
-                    <span style={{color:"#64748b"}}>{count} students</span>
+              <h2>签证状态分布</h2>
+              {STATUSES.map(st => {
+                const count = clients.filter(c => c.status === st).length
+                const total = clients.length || 1
+                const pct = Math.round(count / total * 100)
+                return (
+                  <div className="pipeline-row" key={st}>
+                    <div style={{display:"flex",justifyContent:"space-between"}}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: getStatusColor(st) }}></span>{st}
+                      </span>
+                      <span style={{color:"#64748b"}}>{count} clients</span>
+                    </div>
+                    <div className="progress"><div style={{width:`${pct}%`, backgroundColor: getStatusColor(st)}}></div></div>
                   </div>
-                  <div className="progress"><div style={{width:`${pct}%`}}></div></div>
-                </div>
-              )
-            })}
+                )
+              })}
             </div>
             <div className="card">
-              <h2>顾问排行榜</h2>
-            {COUNSELLORS.map((c, i) => {
-              const mine = students.filter(s => s.counsellor === c)
-              const enrolled = mine.filter(s => s.status === "Enrolled")
-              const bonus = enrolled.reduce((a, s) => a + (s.bonus || settings.defaultBonus), 0)
-              return (
-                <div className="rank-card" key={c}>
-                  <div style={{display:"flex",justifyContent:"space-between",gap:12}}>
-                    <div>
-                      <div style={{fontSize:12,color:"#64748b"}}>#{i+1}</div>
-                      <div style={{fontWeight:700}}>{c}</div>
-                      <div style={{fontSize:12,color:"#64748b"}}>{enrolled.length} enrolled / {mine.length} students</div>
+              <h2>代理业绩排行</h2>
+              {AGENTS.map((a, i) => {
+                const mine = clients.filter(c => c.agent === a)
+                const granted = mine.filter(c => c.status === "Granted")
+                const fee = granted.reduce((sum, c) => sum + (c.service_fee || 0), 0)
+                const successRate = mine.length ? Math.round(granted.length / mine.length * 100) : 0
+                return (
+                  <div className="rank-card" key={a}>
+                    <div style={{display:"flex",justifyContent:"space-between",gap:12}}>
+                      <div>
+                        <div style={{fontSize:12,color:"#64748b"}}>#{i+1}</div>
+                        <div style={{fontWeight:700}}>{a}</div>
+                        <div style={{fontSize:12,color:"#64748b"}}>{granted.length} granted / {mine.length} clients ({successRate}%)</div>
+                      </div>
+                      <div style={{fontWeight:700}}>{currency(fee)}</div>
                     </div>
-                    <div style={{fontWeight:700}}>{currency(bonus)}</div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
+            <div className="card">
+              <h2>签证类型分布</h2>
+              {VISA_TYPES.filter(v => clients.some(c => c.visa_type === v)).map(v => {
+                const count = clients.filter(c => c.visa_type === v).length
+                return (
+                  <div key={v} style={{display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #f1f5f9'}}>
+                    <span>{v}</span><span style={{color: '#64748b', fontWeight: 600}}>{count}</span>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="card">
+              <h2>月度统计</h2>
+              {(() => {
+                const monthly = {}
+                clients.forEach(c => {
+                  if (c.lodgement_date) {
+                    const month = c.lodgement_date.slice(0, 7)
+                    monthly[month] = (monthly[month] || 0) + 1
+                  }
+                })
+                return Object.entries(monthly).sort((a, b) => b[0].localeCompare(a[0])).map(([month, count]) => (
+                  <div key={month} style={{display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #f1f5f9'}}>
+                    <span>{month}</span><span style={{color: '#64748b', fontWeight: 600}}>{count} lodged</span>
+                  </div>
+                ))
+              })()}
             </div>
           </div>
         </>
       )}
 
-      {/* Settings Tab */}
       {activeTab === "settings" && (
         <div className="settings-grid">
           <div className="card">
             <h2>我的信息</h2>
             <div className="info-box">
-              <p><strong>角色：</strong>{user.role === "manager" ? "管理员" : "顾问"}</p>
-              {user.role === "counsellor" && <p><strong>顾问名字：</strong>{user.counsellor}</p>}
-              <p><strong>学生总数：</strong>{students.length}</p>
+              <p><strong>角色：</strong>{user.role === "manager" ? "管理员" : "代理"}</p>
+              {user.role === "agent" && <p><strong>代理名字：</strong>{user.agent}</p>}
+              <p><strong>客户总数：</strong>{clients.length}</p>
+              <p><strong>已下签：</strong>{clients.filter(c => c.status === "Granted").length}</p>
+              <p><strong>活跃案件：</strong>{clients.filter(c => !["Granted", "Refused", "Withdrawn"].includes(c.status)).length}</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Modal */}
       {modalOpen && (
         <div className="modal" onClick={e => e.target === e.currentTarget && setModalOpen(false)}>
           <div className="modal-card">
             <div className="modal-head">
-              <h3>{editingId ? "Edit student" : "Add new student"}</h3>
+              <h3>{editingId ? "Edit client" : "Add new client"}</h3>
               <button className="icon-btn" onClick={() => setModalOpen(false)}>✕</button>
             </div>
             <div className="form-grid">
-              <div className="field"><label>Student ID</label><input value={formData.id} disabled /></div>
-              <div className="field"><label>Student name</label><input value={formData.studentName} onChange={e => setFormData({...formData, studentName: e.target.value})} /></div>
+              <div className="field"><label>Client ID</label><input value={formData.id} disabled /></div>
+              <div className="field"><label>Client name</label><input value={formData.clientName} onChange={e => setFormData({...formData, clientName: e.target.value})} /></div>
               {user.role === "manager" && (
                 <div className="field">
-                  <label>Counsellor</label>
-                  <select value={formData.counsellor} onChange={e => setFormData({...formData, counsellor: e.target.value})}>
-                    {COUNSELLORS.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                  <label>Agent</label>
+                  <select value={formData.agent} onChange={e => setFormData({...formData, agent: e.target.value})}>{AGENTS.map(a => <option key={a} value={a}>{a}</option>)}</select>
                 </div>
               )}
-              <div className="field"><label>School</label><input value={formData.school} onChange={e => setFormData({...formData, school: e.target.value})} /></div>
-              <div className="field"><label>Course</label><input value={formData.course} onChange={e => setFormData({...formData, course: e.target.value})} /></div>
+              <div className="field">
+                <label>Visa type</label>
+                <select value={formData.visaType} onChange={e => setFormData({...formData, visaType: e.target.value})}>
+                  <option value="">Select visa type</option>{VISA_TYPES.map(v => <option key={v} value={v}>{v}</option>)}
+                </select>
+              </div>
               <div className="field">
                 <label>Lead source</label>
-                <select value={formData.source} onChange={e => setFormData({...formData, source: e.target.value})}>
-                  {SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
+                <select value={formData.source} onChange={e => setFormData({...formData, source: e.target.value})}>{SOURCES.map(s => <option key={s} value={s}>{s}</option>)}</select>
               </div>
               <div className="field">
                 <label>Status</label>
-                <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})}>
-                  {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
+                <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})}>{STATUSES.map(s => <option key={s} value={s}>{s}</option>)}</select>
               </div>
-              <div className="field"><label>Intake date</label><input type="date" value={formData.intakeDate} onChange={e => setFormData({...formData, intakeDate: e.target.value})} /></div>
-              <div className="field"><label>Visa expiry date</label><input type="date" value={formData.visaExpiryDate} onChange={e => setFormData({...formData, visaExpiryDate: e.target.value})} /></div>
-              <div className="field"><label>Tuition (AUD)</label><input type="number" value={formData.tuition} onChange={e => setFormData({...formData, tuition: e.target.value})} /></div>
+              <div className="field"><label>Lodgement date</label><input type="date" value={formData.lodgementDate} onChange={e => setFormData({...formData, lodgementDate: e.target.value})} /></div>
+              <div className="field"><label>Decision date</label><input type="date" value={formData.decisionDate} onChange={e => setFormData({...formData, decisionDate: e.target.value})} /></div>
+              <div className="field"><label>Service fee (AUD)</label><input type="number" value={formData.serviceFee} onChange={e => setFormData({...formData, serviceFee: e.target.value})} /></div>
               <div className="field">
-                <label>Bonus</label>
-                <select value={formData.bonus} onChange={e => setFormData({...formData, bonus: Number(e.target.value)})}>
-                  {settings.bonusOptions.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
+                <label>Payment status</label>
+                <select value={formData.paymentStatus} onChange={e => setFormData({...formData, paymentStatus: e.target.value})}>{PAYMENT_STATUSES.map(p => <option key={p} value={p}>{p}</option>)}</select>
               </div>
               <div className="field" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <input 
-                    type="checkbox" 
-                    checked={formData.isUrgent}
-                    onChange={e => setFormData({...formData, isUrgent: e.target.checked})}
-                    style={{ width: '20px', height: '20px', cursor: 'pointer' }}
-                  />
-                  <span style={{ color: formData.isUrgent ? '#dc2626' : '#475569', fontWeight: formData.isUrgent ? '600' : '400' }}>
-                    🔥 標記為緊急
-                  </span>
+                  <input type="checkbox" checked={formData.isUrgent} onChange={e => setFormData({...formData, isUrgent: e.target.checked})} style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
+                  <span style={{ color: formData.isUrgent ? '#dc2626' : '#475569', fontWeight: formData.isUrgent ? '600' : '400' }}>🔥 标记为紧急</span>
                 </label>
               </div>
               <div className="field full"><label>Notes</label><textarea rows={4} value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} /></div>
