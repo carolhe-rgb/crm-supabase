@@ -43,10 +43,17 @@ const VISA_TYPES = [
   "Subclass 485 - Temporary Graduate",
   "Subclass 600 - Visitor",
   "Subclass 417/462 - Working Holiday",
-  "Skill assessment",
-  "Child visa",
-  "Bridging visa",
-  "ART上诉",
+  "Skill Assessment",
+  "Subclass 101 - Child (Offshore)",
+  "Subclass 802 - Child (Onshore)",
+  "Subclass 445 - Dependent Child (Temporary)",
+  "Subclass 102 - Adoption",
+  "Subclass 117 - Orphan Relative",
+  "Subclass 010 - Bridging Visa A",
+  "Subclass 020 - Bridging Visa B",
+  "Subclass 030 - Bridging Visa C",
+  "Subclass 050 - Bridging Visa E",
+  "ART Review",
   "Other"
 ]
 
