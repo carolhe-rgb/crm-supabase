@@ -539,7 +539,7 @@ export default function Home() {
             <table>
               <thead>
                 <tr>
-                  <th style={{minWidth: '130px'}}>ID</th>
+                  <th style={{minWidth: '130px'}}>Case ID</th>
                   <th style={{minWidth: '140px'}}>Client</th>
                   {user.role === "manager" && <th style={{minWidth: '80px'}}>Agent</th>}
                   <th style={{minWidth: '200px'}}>Visa Type</th>
@@ -715,7 +715,7 @@ export default function Home() {
               <button className="icon-btn" onClick={() => setModalOpen(false)}>✕</button>
             </div>
             <div className="form-grid">
-              <div className="field"><label>Client ID</label><input value={formData.id} disabled /></div>
+              <div className="field"><label>Case ID</label><input value={formData.id} disabled /></div>
               <div className="field"><label>Client name</label><input value={formData.clientName} onChange={e => setFormData({...formData, clientName: e.target.value})} /></div>
               {user.role === "manager" && (
                 <div className="field">
