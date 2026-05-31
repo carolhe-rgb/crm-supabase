@@ -493,9 +493,9 @@ export default function Home() {
           <div className="kpi-sub">已收款 {currency(paidFee)}</div>
         </div>
         <div className="card kpi">
-          <div className="kpi-title">GST 估算</div>
+          <div className="kpi-title">GST总额</div>
           <div className="kpi-value">{currency(gstTotal)}</div>
-          <div className="kpi-sub">不含 GST Free 案件的 1/11</div>
+          <div className="kpi-sub">{user.role === "manager" ? "全公司数据" : "我的客户"}</div>
         </div>
       </div>
 
