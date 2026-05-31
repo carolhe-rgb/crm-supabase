@@ -551,9 +551,9 @@ export default function Home() {
           )}
 
           <div style={{ width: '100%' }}>
-            <table style={{ width: '100%', fontSize: '13px', tableLayout: 'auto' }}>
+            <table style={{ width: '100%' }}>
               <thead>
-                <tr style={{ fontSize: '12px' }}>
+                <tr>
                   <th style={{minWidth: '90px', padding: '8px 6px'}}>Case ID</th>
                   <th style={{minWidth: '100px', padding: '8px 6px'}}>Client</th>
                   {user.role === "manager" && <th style={{minWidth: '60px', padding: '8px 6px'}}>Agent</th>}
@@ -575,36 +575,36 @@ export default function Home() {
                     </td>
                     <td style={{padding: '6px'}}>
                       <div><strong>{c.client_name}</strong></div>
-                      <div style={{color:"#64748b",fontSize:11}}>{c.source}</div>
+                      <div style={{color:"#64748b"}}>{c.source}</div>
                     </td>
                     {user.role === "manager" && <td style={{padding: '6px'}}>{c.agent}</td>}
                     <td style={{padding: '6px'}}>
                       <div>{c.visa_type || "-"}</div>
-                      <div style={{color:"#64748b",fontSize:11}}>{c.lodgement_date ? c.lodgement_date : 'Not lodged'}</div>
+                      <div style={{color:"#64748b"}}>{c.lodgement_date ? c.lodgement_date : 'Not lodged'}</div>
                     </td>
                     <td style={{padding: '6px'}}>
-                      <span style={{ display: 'inline-block', padding: '3px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 600, backgroundColor: getStatusColor(c.status) + '20', color: getStatusColor(c.status) }}>{c.status}</span>
+                      <span style={{ display: 'inline-block', padding: '3px 8px', borderRadius: '6px', fontWeight: 600, backgroundColor: getStatusColor(c.status) + '20', color: getStatusColor(c.status) }}>{c.status}</span>
                     </td>
-                    <td style={{padding: '6px', fontSize: '12px', lineHeight: '1.4'}}>
-                      <div><span style={{color: '#64748b'}}>L:</span> {c.lodgement_date || "-"}</div>
-                      <div><span style={{color: '#64748b'}}>D:</span> {c.due_date ? <span style={{ color: new Date(c.due_date) < new Date() && c.status === 'Under Review' ? '#dc2626' : 'inherit', fontWeight: new Date(c.due_date) < new Date() && c.status === 'Under Review' ? '600' : '400' }}>{c.due_date}{new Date(c.due_date) < new Date() && c.status === 'Under Review' && ' ⚠️'}</span> : "-"}</div>
+                    <td style={{padding: '6px', lineHeight: '1.4'}}>
+                      <div><span style={{color: '#64748b'}}>Lodgement date:</span> {c.lodgement_date || "-"}</div>
+                      <div><span style={{color: '#64748b'}}>Due date:</span> {c.due_date ? <span style={{ color: new Date(c.due_date) < new Date() && c.status === 'Under Review' ? '#dc2626' : 'inherit', fontWeight: new Date(c.due_date) < new Date() && c.status === 'Under Review' ? '600' : '400' }}>{c.due_date}{new Date(c.due_date) < new Date() && c.status === 'Under Review' && ' ⚠️'}</span> : "-"}</div>
                     </td>
                     <td style={{padding: '6px'}}>
                       <div>{currency(c.service_fee)}</div>
                       <div style={{marginTop: '2px'}}>
-                        <span style={{ display: 'inline-block', padding: '1px 4px', borderRadius: '4px', fontSize: '10px', backgroundColor: (() => { switch(c.payment_status) { case 'Fully Paid': return '#10b98120'; case 'Unpaid': return '#ef444420'; case 'Deposit Paid': return '#3b82f620'; case 'Partially Paid': return '#f59e0b20'; case 'Refunded': return '#6b728020'; default: return '#e2e8f020'; } })(), color: (() => { switch(c.payment_status) { case 'Fully Paid': return '#10b981'; case 'Unpaid': return '#ef4444'; case 'Deposit Paid': return '#3b82f6'; case 'Partially Paid': return '#f59e0b'; case 'Refunded': return '#6b7280'; default: return '#64748b'; } })() }}>{c.payment_status}</span>
+                        <span style={{ display: 'inline-block', padding: '1px 4px', borderRadius: '4px', backgroundColor: (() => { switch(c.payment_status) { case 'Fully Paid': return '#10b98120'; case 'Unpaid': return '#ef444420'; case 'Deposit Paid': return '#3b82f620'; case 'Partially Paid': return '#f59e0b20'; case 'Refunded': return '#6b728020'; default: return '#e2e8f020'; } })(), color: (() => { switch(c.payment_status) { case 'Fully Paid': return '#10b981'; case 'Unpaid': return '#ef4444'; case 'Deposit Paid': return '#3b82f6'; case 'Partially Paid': return '#f59e0b'; case 'Refunded': return '#6b7280'; default: return '#64748b'; } })() }}>{c.payment_status}</span>
                       </div>
                     </td>
                     <td style={{padding: '6px'}}>
-                      <div style={{fontSize: '12px', color: '#475569', lineHeight: '1.3', whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}>
+                      <div style={{ color: '#475569', lineHeight: '1.3', whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}>
                         {c.notes ? (c.notes.length > 80 ? c.notes.substring(0, 80) + '...' : c.notes) : <span style={{color: '#94a3b8'}}>-</span>}
                       </div>
                     </td>
                     <td style={{padding: '6px'}}>
                       <div style={{display: 'flex', gap: '4px', flexWrap: 'wrap'}}>
-                        <button className="small-btn" style={{padding: '4px 8px', fontSize: '12px'}} onClick={() => openModal(c.id)}>Edit</button>
-                        <button className="small-btn" style={{padding: '4px 8px', fontSize: '12px'}} onClick={() => toggleUrgent(c.id)} style={{background: !!c.is_urgent ? '#fef2f2' : '#fff', borderColor: !!c.is_urgent ? '#ef4444' : '#e2e8f0', color: !!c.is_urgent ? '#dc2626' : '#64748b'}} title={!!c.is_urgent ? "取消紧急标记" : "标记为紧急"}>{!!c.is_urgent ? '🔥取消' : '标记'}</button>
-                        {user.role === "manager" && <button className="small-btn danger" style={{padding: '4px 8px', fontSize: '12px'}} onClick={() => deleteClient(c.id)}>Del</button>}
+                        <button className="small-btn" onClick={() => openModal(c.id)}>Edit</button>
+                        <button className="small-btn" onClick={() => toggleUrgent(c.id)} style={{background: !!c.is_urgent ? '#fef2f2' : '#fff', borderColor: !!c.is_urgent ? '#ef4444' : '#e2e8f0', color: !!c.is_urgent ? '#dc2626' : '#64748b'}} title={!!c.is_urgent ? "取消紧急标记" : "标记为紧急"}>{!!c.is_urgent ? '🔥 取消紧急' : '标记紧急'}</button>
+                        {user.role === "manager" && <button className="small-btn danger" onClick={() => deleteClient(c.id)}>Delete</button>}
                       </div>
                     </td>
                   </tr>
