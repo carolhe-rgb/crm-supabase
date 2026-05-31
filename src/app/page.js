@@ -550,8 +550,8 @@ export default function Home() {
             </div>
           )}
 
-          <div className="table-wrap">
-            <table>
+          <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
+            <table style={{ width: '100%', minWidth: '1100px' }}>
               <thead>
                 <tr>
                   <th style={{minWidth: '130px'}}>Case ID</th>
