@@ -579,7 +579,7 @@ export default function Home() {
                       <div style={{fontSize: '13px'}}>
                         <div>{currency(c.service_fee)}</div>
                         <div style={{marginTop: '4px'}}>
-                          <span style={{ display: 'inline-block', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', backgroundColor: c.payment_status === 'Fully Paid' ? '#10b98120' : c.payment_status === 'Unpaid' ? '#ef444420' : '#f59e0b20', color: c.payment_status === 'Fully Paid' ? '#10b981' : c.payment_status === 'Unpaid' ? '#ef4444' : '#f59e0b' }}>{c.payment_status}</span>
+                          <span style={{ display: 'inline-block', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', backgroundColor: (() => { switch(c.payment_status) { case 'Fully Paid': return '#10b98120'; case 'Unpaid': return '#ef444420'; case 'Deposit Paid': return '#3b82f620'; case 'Partially Paid': return '#f59e0b20'; case 'Refunded': return '#6b728020'; default: return '#e2e8f020'; } })(), color: (() => { switch(c.payment_status) { case 'Fully Paid': return '#10b981'; case 'Unpaid': return '#ef4444'; case 'Deposit Paid': return '#3b82f6'; case 'Partially Paid': return '#f59e0b'; case 'Refunded': return '#6b7280'; default: return '#64748b'; } })() }}>{c.payment_status}</span>
                         </div>
                       </div>
                     </td>
@@ -590,12 +590,6 @@ export default function Home() {
                     </td>
                     <td>
                       <div className="action-group">
-                        {user.role === "agent" && c.payment_status !== "Fully Paid" && (
-                          <button className="small-btn primary" onClick={() => markPaymentStatus(c.id, "Deposit Paid")}>Mark Deposit</button>
-                        )}
-                        {user.role === "manager" && (
-                          <button className="small-btn primary" onClick={() => markPaymentStatus(c.id, c.payment_status === "Fully Paid" ? "Unpaid" : "Fully Paid")}>{c.payment_status === "Fully Paid" ? "Undo Paid" : "Mark Paid"}</button>
-                        )}
                         <button className="small-btn" onClick={() => openModal(c.id)}>Edit</button>
                         <button className="small-btn" onClick={() => toggleUrgent(c.id)} style={{background: !!c.is_urgent ? '#fef2f2' : '#fff', borderColor: !!c.is_urgent ? '#ef4444' : '#e2e8f0', color: !!c.is_urgent ? '#dc2626' : '#64748b'}} title={!!c.is_urgent ? "取消紧急标记" : "标记为紧急"}>{!!c.is_urgent ? '🔥 取消紧急' : '标记紧急'}</button>
                         {user.role === "manager" && <button className="small-btn danger" onClick={() => deleteClient(c.id)}>Delete</button>}
