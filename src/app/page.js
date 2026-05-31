@@ -488,7 +488,7 @@ export default function Home() {
           <div className="kpi-sub">活跃案件</div>
         </div>
         <div className="card kpi">
-          <div className="kpi-title">服务费总额</div>
+          <div className="kpi-title">服务费总额（含GST）</div>
           <div className="kpi-value">{currency(totalFee)}</div>
           <div className="kpi-sub">已收款 {currency(paidFee)}</div>
         </div>

@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS clients (
   lodgement_date DATE,
   decision_date DATE,
   service_fee INTEGER DEFAULT 0,
+  gst_free BOOLEAN DEFAULT FALSE,
   payment_status TEXT DEFAULT 'Unpaid',
   paid_at TIMESTAMPTZ,
   source TEXT DEFAULT 'Referral',
