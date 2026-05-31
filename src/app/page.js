@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react'
-import './page.css'
 import { createClient } from '@supabase/supabase-js'
 
 const USE_MOCK = false
