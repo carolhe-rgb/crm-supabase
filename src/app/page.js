@@ -5,11 +5,11 @@ import { supabase } from '@/lib/supabase'
 
 // ==================== Mock 数据 ====================
 const MOCK_DATA = [
-  { id: "IMM-2025-0001", client_name: "张三", agent: "David GUO", visa_type: "Subclass 189 - Skilled Independent", source: "Client Referral", status: "Application Lodged", lodgement_date: "2025-03-15", decision_date: "", service_fee: 5500, gst_free: false, payment_status: "Deposit Paid", paid_at: null, notes: "IT 职业评估已完成", is_urgent: false, created_at: "2025-03-10T08:00:00Z" },
-  { id: "IMM-2025-0002", client_name: "李四", agent: "Yulan HE", visa_type: "Subclass 500 - Student", source: "Walk-in / Call-in", status: "Consultation", lodgement_date: "", decision_date: "", service_fee: 3000, gst_free: false, payment_status: "Unpaid", paid_at: null, notes: "等待成绩单", is_urgent: true, created_at: "2025-03-12T10:00:00Z" },
-  { id: "IMM-2025-0003", client_name: "王五", agent: "Shuoren CHEN", visa_type: "Subclass 820/801 - Partner Onshore", source: "Walk-in / Call-in", status: "Granted", lodgement_date: "2024-11-20", decision_date: "2025-02-28", service_fee: 4500, gst_free: true, payment_status: "Fully Paid", paid_at: "2025-01-15T09:00:00Z", notes: "配偶签证顺利下签", is_urgent: false, created_at: "2024-11-15T08:00:00Z" },
-  { id: "IMM-2025-0004", client_name: "赵六", agent: "David GUO", visa_type: "Subclass 190 - Skilled Nominated", source: "Walk-in / Call-in", status: "Processing", lodgement_date: "2025-01-10", decision_date: "2025-06-30", service_fee: 6000, gst_free: false, payment_status: "Partially Paid", paid_at: null, notes: "塔州州担保已获邀", is_urgent: false, created_at: "2025-01-05T08:00:00Z" },
-  { id: "IMM-2025-0005", client_name: "陈七", agent: "Yulan HE", visa_type: "Subclass 143 - Contributory Parent", source: "Client Referral", status: "Consultation", lodgement_date: "", decision_date: "", service_fee: 8000, gst_free: false, payment_status: "Unpaid", paid_at: null, notes: "初步咨询，等待材料清单", is_urgent: false, created_at: "2025-03-20T14:00:00Z" }
+  { id: "IMM-2025-0001", client_name: "张三", agent: "David GUO", visa_type: "Subclass 189 - Skilled Independent", source: "Client Referral", status: "Application Lodged", lodgement_date: "2025-03-15", due_date: "", service_fee: 5500, gst_free: false, payment_status: "Deposit Paid", paid_at: null, notes: "IT 职业评估已完成", is_urgent: false, created_at: "2025-03-10T08:00:00Z" },
+  { id: "IMM-2025-0002", client_name: "李四", agent: "Yulan HE", visa_type: "Subclass 500 - Student", source: "Walk-in / Call-in", status: "Consultation", lodgement_date: "", due_date: "", service_fee: 3000, gst_free: false, payment_status: "Unpaid", paid_at: null, notes: "等待成绩单", is_urgent: true, created_at: "2025-03-12T10:00:00Z" },
+  { id: "IMM-2025-0003", client_name: "王五", agent: "Shuoren CHEN", visa_type: "Subclass 820/801 - Partner Onshore", source: "Walk-in / Call-in", status: "Granted", lodgement_date: "2024-11-20", due_date: "2025-02-28", service_fee: 4500, gst_free: true, payment_status: "Fully Paid", paid_at: "2025-01-15T09:00:00Z", notes: "配偶签证顺利下签", is_urgent: false, created_at: "2024-11-15T08:00:00Z" },
+  { id: "IMM-2025-0004", client_name: "赵六", agent: "David GUO", visa_type: "Subclass 190 - Skilled Nominated", source: "Walk-in / Call-in", status: "Processing", lodgement_date: "2025-01-10", due_date: "2025-06-30", service_fee: 6000, gst_free: false, payment_status: "Partially Paid", paid_at: null, notes: "塔州州担保已获邀", is_urgent: false, created_at: "2025-01-05T08:00:00Z" },
+  { id: "IMM-2025-0005", client_name: "陈七", agent: "Yulan HE", visa_type: "Subclass 143 - Contributory Parent", source: "Client Referral", status: "Consultation", lodgement_date: "", due_date: "", service_fee: 8000, gst_free: false, payment_status: "Unpaid", paid_at: null, notes: "初步咨询，等待材料清单", is_urgent: false, created_at: "2025-03-20T14:00:00Z" }
 ]
 
 const USE_MOCK = false  // 设置为 true 使用 mock 数据，false 连接 Supabase
@@ -105,7 +105,7 @@ export default function Home() {
   const [formData, setFormData] = useState({
     id: "", clientName: "", agent: "", visaType: "",
     source: "Walk-in / Call-in", status: "Consultation", lodgementDate: "", 
-    decisionDate: "", serviceFee: "", gstFree: false, paymentStatus: "Unpaid",
+    dueDate: "", serviceFee: "", gstFree: false, paymentStatus: "Unpaid",
     notes: "", isUrgent: false
   })
 
@@ -178,6 +178,7 @@ export default function Home() {
       const shouldCancelUrgent = ["Granted", "Refused", "Withdrawn"].includes(client.status)
       const today = new Date().toISOString().slice(0, 10)
       const autoLodgementDate = (client.status === "Application Lodged" && !client.lodgementDate) ? today : (client.lodgementDate || null)
+      const autoDueDate = (client.status === "Further Information Required" && !client.dueDate) ? new Date(Date.now() + 28*86400000).toISOString().slice(0, 10) : (client.dueDate || null)
       const newClient = {
         id: client.id,
         client_name: client.clientName,
@@ -186,7 +187,7 @@ export default function Home() {
         source: client.source,
         status: client.status,
         lodgement_date: autoLodgementDate,
-        decision_date: client.decisionDate || null,
+        due_date: autoDueDate,
         service_fee: Number(client.serviceFee || 0),
         payment_status: client.paymentStatus || "Unpaid",
         paid_at: null,
@@ -216,6 +217,7 @@ export default function Home() {
     // Auto-fill lodgement date when status becomes Application Lodged
     const today = new Date().toISOString().slice(0, 10)
     const autoLodgementDate = (client.status === "Application Lodged" && !client.lodgementDate) ? today : (client.lodgementDate || null)
+    const autoDueDate = (client.status === "Further Information Required" && !client.dueDate) ? new Date(Date.now() + 28*86400000).toISOString().slice(0, 10) : (client.dueDate || null)
 
     const payload = {
       id: client.id,
@@ -225,7 +227,7 @@ export default function Home() {
       source: client.source,
       status: client.status,
       lodgement_date: autoLodgementDate,
-      decision_date: client.decisionDate || null,
+      due_date: autoDueDate,
       service_fee: Number(client.serviceFee || 0),
       gst_free: client.gstFree || false,
       payment_status: client.paymentStatus || "Unpaid",
@@ -256,11 +258,11 @@ export default function Home() {
   function exportToCSV(data, filename) {
     if (data.length === 0) { alert('没有数据可导出'); return }
     const headers = ['ID', 'Client Name', 'Agent', 'Visa Type', 'Source', 'Status',
-      'Lodgement Date', 'Decision Date', 'Service Fee (AUD)', 'GST Free',
+      'Lodgement Date', 'Due Date', 'Service Fee (AUD)', 'GST Free',
       'Payment Status', 'Paid At', 'Notes', 'Is Urgent', 'Created At']
     const rows = data.map(c => [
       c.id, c.client_name, c.agent, c.visa_type, c.source, c.status,
-      c.lodgement_date || '', c.decision_date || '', c.service_fee || 0,
+      c.lodgement_date || '', c.due_date || '', c.service_fee || 0,
       c.gst_free ? 'Yes' : 'No',
       c.payment_status || 'Unpaid', c.paid_at ? fmtDateTime(c.paid_at) : '',
       c.payment_status || 'Unpaid', c.paid_at ? fmtDateTime(c.paid_at) : '',
@@ -280,12 +282,12 @@ export default function Home() {
   function exportToExcel(data, filename) {
     if (data.length === 0) { alert('没有数据可导出'); return }
     const headers = ['ID', 'Client Name', 'Agent', 'Visa Type', 'Source', 'Status',
-      'Lodgement Date', 'Decision Date', 'Service Fee (AUD)', 'GST Free',
+      'Lodgement Date', 'Due Date', 'Service Fee (AUD)', 'GST Free',
       'Payment Status', 'Paid At', 'Notes', 'Created At']
     const rows = data.map(c => `<tr>
       <td>${c.id}</td><td>${c.client_name}</td><td>${c.agent}</td>
       <td>${c.visa_type || ''}</td><td>${c.source}</td><td>${c.status}</td>
-      <td>${c.lodgement_date || ''}</td><td>${c.decision_date || ''}</td>
+      <td>${c.lodgement_date || ''}</td><td>${c.due_date || ''}</td>
       <td>${c.service_fee || 0}</td><td>${c.gst_free ? 'Yes' : 'No'}</td>
       <td>${c.payment_status || 'Unpaid'}</td><td>${c.paid_at ? fmtDateTime(c.paid_at) : ''}</td>
       <td>${(c.notes || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
@@ -372,7 +374,7 @@ export default function Home() {
       setFormData({
         id: c.id, clientName: c.client_name, agent: c.agent,
         visaType: c.visa_type || "", source: c.source, status: c.status,
-        lodgementDate: c.lodgement_date || "", decisionDate: c.decision_date || "",
+        lodgementDate: c.lodgement_date || "", dueDate: c.due_date || "",
         serviceFee: c.service_fee, gstFree: c.gst_free || false, paymentStatus: c.payment_status,
         notes: c.notes || "", isUrgent: c.is_urgent || false
       })
@@ -381,7 +383,7 @@ export default function Home() {
       setFormData({
         id: newId, clientName: "", agent: user.role === "manager" ? AGENTS[0] : user.agent,
         visaType: "", source: "Walk-in / Call-in", status: "Consultation",
-        lodgementDate: "", decisionDate: "", serviceFee: "", gstFree: false,
+        lodgementDate: "", dueDate: "", serviceFee: "", gstFree: false,
         paymentStatus: "Unpaid", notes: "", isUrgent: false
       })
     }
@@ -586,7 +588,7 @@ export default function Home() {
                     <td>
                       <div style={{fontSize: '12px', lineHeight: '1.5'}}>
                         <div><span style={{color: '#64748b'}}>递交:</span> {c.lodgement_date || "-"}</div>
-                        <div><span style={{color: '#64748b'}}>决定:</span> {c.decision_date ? <span style={{ color: new Date(c.decision_date) < new Date() && c.status === 'Under Review' ? '#dc2626' : 'inherit', fontWeight: new Date(c.decision_date) < new Date() && c.status === 'Under Review' ? '600' : '400' }}>{c.decision_date}{new Date(c.decision_date) < new Date() && c.status === 'Under Review' && ' ⚠️'}</span> : "-"}</div>
+                        <div><span style={{color: '#64748b'}}>Due date:</span> {c.due_date ? <span style={{ color: new Date(c.due_date) < new Date() && c.status === 'Under Review' ? '#dc2626' : 'inherit', fontWeight: new Date(c.due_date) < new Date() && c.status === 'Under Review' ? '600' : '400' }}>{c.due_date}{new Date(c.due_date) < new Date() && c.status === 'Under Review' && ' ⚠️'}</span> : "-"}</div>
                       </div>
                     </td>
                     <td>
@@ -745,7 +747,7 @@ export default function Home() {
                 <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})}>{STATUSES.map(s => <option key={s} value={s}>{s}</option>)}</select>
               </div>
               <div className="field"><label>Lodgement date</label><input type="date" value={formData.lodgementDate} onChange={e => setFormData({...formData, lodgementDate: e.target.value})} /></div>
-              <div className="field"><label>Decision date</label><input type="date" value={formData.decisionDate} onChange={e => setFormData({...formData, decisionDate: e.target.value})} /></div>
+              <div className="field"><label>Due date</label><input type="date" value={formData.dueDate} onChange={e => setFormData({...formData, dueDate: e.target.value})} /></div>
               <div className="field"><label>Service fee (AUD)</label><input type="number" value={formData.serviceFee} onChange={e => setFormData({...formData, serviceFee: e.target.value})} /></div>
               <div className="field" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
