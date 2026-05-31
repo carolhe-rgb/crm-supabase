@@ -492,13 +492,11 @@ export default function Home() {
           <div className="kpi-value">{currency(totalFee)}</div>
           <div className="kpi-sub">已收款 {currency(paidFee)}</div>
         </div>
-        {user.role === "manager" && (
-          <div className="card kpi">
-            <div className="kpi-title">GST 估算</div>
-            <div className="kpi-value">{currency(gstTotal)}</div>
-            <div className="kpi-sub">不含 GST Free 案件的 1/11</div>
-          </div>
-        )}
+        <div className="card kpi">
+          <div className="kpi-title">GST 估算</div>
+          <div className="kpi-value">{currency(gstTotal)}</div>
+          <div className="kpi-sub">不含 GST Free 案件的 1/11</div>
+        </div>
       </div>
 
       <div className="tabs">
