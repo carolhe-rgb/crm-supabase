@@ -587,7 +587,7 @@ export default function Home() {
                     </td>
                     <td>
                       <div style={{fontSize: '12px', lineHeight: '1.5'}}>
-                        <div><span style={{color: '#64748b'}}>递交:</span> {c.lodgement_date || "-"}</div>
+                        <div><span style={{color: '#64748b'}}>Lodgement date:</span> {c.lodgement_date || "-"}</div>
                         <div><span style={{color: '#64748b'}}>Due date:</span> {c.due_date ? <span style={{ color: new Date(c.due_date) < new Date() && c.status === 'Under Review' ? '#dc2626' : 'inherit', fontWeight: new Date(c.due_date) < new Date() && c.status === 'Under Review' ? '600' : '400' }}>{c.due_date}{new Date(c.due_date) < new Date() && c.status === 'Under Review' && ' ⚠️'}</span> : "-"}</div>
                       </div>
                     </td>
