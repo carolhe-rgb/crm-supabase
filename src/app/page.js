@@ -196,8 +196,7 @@ export default function Home() {
       if (editingId) {
         const existing = clients.find(c => c.id === editingId)
         if (existing) {
-          newClient.paid_at = existing.paid_at
-          newClient.payment_status = existing.payment_status
+          newClient.created_at = existing.created_at
         }
         setClients(clients.map(c => c.id === editingId ? newClient : c))
       } else {
@@ -222,7 +221,7 @@ export default function Home() {
       lodgement_date: client.lodgementDate || null,
       decision_date: client.decisionDate || null,
       service_fee: Number(client.serviceFee || 0),
-      payment_status: old?.payment_status || "Unpaid",
+      payment_status: client.paymentStatus || "Unpaid",
       paid_at: old?.paid_at || null,
       notes: client.notes,
       is_urgent: finalIsUrgent
