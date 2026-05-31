@@ -100,6 +100,7 @@ export default function Home() {
     status: "All", 
     source: "All", 
     visaType: "All",
+    agent: "All",
     year: "All", 
     paymentStatus: "All" 
   })
@@ -404,6 +405,7 @@ export default function Home() {
     if (filters.source !== "All" && c.source !== filters.source) return false
     if (filters.visaType !== "All" && c.visa_type !== filters.visaType) return false
     if (filters.year !== "All" && getRecordYear(c) !== filters.year) return false
+    if (filters.agent !== "All" && c.agent !== filters.agent) return false
     if (filters.paymentStatus !== "All" && c.payment_status !== filters.paymentStatus) return false
     return true
   })
@@ -511,6 +513,9 @@ export default function Home() {
               </select>
               <select value={filters.source} onChange={e => setFilters({...filters, source: e.target.value})}>
                 <option value="All">All Sources</option>{SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+              <select value={filters.agent} onChange={e => setFilters({...filters, agent: e.target.value})}>
+                <option value="All">All Agents</option>{AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
               </select>
               <select value={filters.paymentStatus} onChange={e => setFilters({...filters, paymentStatus: e.target.value})}>
                 <option value="All">Payment Status</option>{PAYMENT_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
