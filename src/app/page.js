@@ -5,11 +5,11 @@ import { supabase } from '@/lib/supabase'
 
 // ==================== Mock 数据 ====================
 const MOCK_DATA = [
-  { id: "IMM-2025-0001", client_name: "张三", agent: "David GUO", visa_type: "Subclass 189 - Skilled Independent", source: "Referral", status: "Application Lodged", lodgement_date: "2025-03-15", decision_date: "", service_fee: 5500, payment_status: "Deposit Paid", paid_at: null, notes: "IT 职业评估已完成", is_urgent: false, created_at: "2025-03-10T08:00:00Z" },
-  { id: "IMM-2025-0002", client_name: "李四", agent: "Yulan HE", visa_type: "Subclass 500 - Student", source: "WeChat", status: "Consultation", lodgement_date: "", decision_date: "", service_fee: 3000, payment_status: "Unpaid", paid_at: null, notes: "等待成绩单", is_urgent: true, created_at: "2025-03-12T10:00:00Z" },
-  { id: "IMM-2025-0003", client_name: "王五", agent: "Shuoren CHEN", visa_type: "Subclass 820/801 - Partner Onshore", source: "Walk-in", status: "Granted", lodgement_date: "2024-11-20", decision_date: "2025-02-28", service_fee: 4500, payment_status: "Fully Paid", paid_at: "2025-01-15T09:00:00Z", notes: "配偶签证顺利下签", is_urgent: false, created_at: "2024-11-15T08:00:00Z" },
-  { id: "IMM-2025-0004", client_name: "赵六", agent: "David GUO", visa_type: "Subclass 190 - Skilled Nominated", source: "Website", status: "Processing", lodgement_date: "2025-01-10", decision_date: "2025-06-30", service_fee: 6000, payment_status: "Partially Paid", paid_at: null, notes: "塔州州担保已获邀", is_urgent: false, created_at: "2025-01-05T08:00:00Z" },
-  { id: "IMM-2025-0005", client_name: "陈七", agent: "Yulan HE", visa_type: "Subclass 143 - Contributory Parent", source: "Referral", status: "Consultation", lodgement_date: "", decision_date: "", service_fee: 8000, payment_status: "Unpaid", paid_at: null, notes: "初步咨询，等待材料清单", is_urgent: false, created_at: "2025-03-20T14:00:00Z" }
+  { id: "IMM-2025-0001", client_name: "张三", agent: "David GUO", visa_type: "Subclass 189 - Skilled Independent", source: "Client Referral", status: "Application Lodged", lodgement_date: "2025-03-15", decision_date: "", service_fee: 5500, payment_status: "Deposit Paid", paid_at: null, notes: "IT 职业评估已完成", is_urgent: false, created_at: "2025-03-10T08:00:00Z" },
+  { id: "IMM-2025-0002", client_name: "李四", agent: "Yulan HE", visa_type: "Subclass 500 - Student", source: "Walk-in / Call-in", status: "Consultation", lodgement_date: "", decision_date: "", service_fee: 3000, payment_status: "Unpaid", paid_at: null, notes: "等待成绩单", is_urgent: true, created_at: "2025-03-12T10:00:00Z" },
+  { id: "IMM-2025-0003", client_name: "王五", agent: "Shuoren CHEN", visa_type: "Subclass 820/801 - Partner Onshore", source: "Walk-in / Call-in", status: "Granted", lodgement_date: "2024-11-20", decision_date: "2025-02-28", service_fee: 4500, payment_status: "Fully Paid", paid_at: "2025-01-15T09:00:00Z", notes: "配偶签证顺利下签", is_urgent: false, created_at: "2024-11-15T08:00:00Z" },
+  { id: "IMM-2025-0004", client_name: "赵六", agent: "David GUO", visa_type: "Subclass 190 - Skilled Nominated", source: "Walk-in / Call-in", status: "Processing", lodgement_date: "2025-01-10", decision_date: "2025-06-30", service_fee: 6000, payment_status: "Partially Paid", paid_at: null, notes: "塔州州担保已获邀", is_urgent: false, created_at: "2025-01-05T08:00:00Z" },
+  { id: "IMM-2025-0005", client_name: "陈七", agent: "Yulan HE", visa_type: "Subclass 143 - Contributory Parent", source: "Client Referral", status: "Consultation", lodgement_date: "", decision_date: "", service_fee: 8000, payment_status: "Unpaid", paid_at: null, notes: "初步咨询，等待材料清单", is_urgent: false, created_at: "2025-03-20T14:00:00Z" }
 ]
 
 const USE_MOCK = false  // 设置为 true 使用 mock 数据，false 连接 Supabase
@@ -54,13 +54,10 @@ const VISA_TYPES = [
 ]
 
 const SOURCES = [
-  "Referral", 
-  "WeChat", 
-  "Xiaohongshu",
-  "Walk-in", 
-  "Website", 
-  "Google/Search",
-  "Social Media",
+  "Walk-in / Call-in",
+  "Internal Office Referral",
+  "Agent / Partner Referral",
+  "Client Referral",
   "Previous Client",
   "Other"
 ]
@@ -107,7 +104,7 @@ export default function Home() {
 
   const [formData, setFormData] = useState({
     id: "", clientName: "", agent: "", visaType: "",
-    source: "Referral", status: "Enquiry", lodgementDate: "", 
+    source: "Walk-in / Call-in", status: "Enquiry", lodgementDate: "", 
     decisionDate: "", serviceFee: "", paymentStatus: "Unpaid",
     notes: "", isUrgent: false
   })
@@ -375,7 +372,7 @@ export default function Home() {
       const newId = await generateClientID()
       setFormData({
         id: newId, clientName: "", agent: user.role === "manager" ? AGENTS[0] : user.agent,
-        visaType: "", source: "Referral", status: "Consultation",
+        visaType: "", source: "Walk-in / Call-in", status: "Consultation",
         lodgementDate: "", decisionDate: "", serviceFee: "",
         paymentStatus: "Unpaid", notes: "", isUrgent: false
       })
