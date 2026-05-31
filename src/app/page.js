@@ -192,7 +192,7 @@ export default function Home() {
         payment_status: client.paymentStatus || "Unpaid",
         paid_at: null,
         notes: client.notes,
-        is_urgent: shouldCancelUrgent ? false : (client.isUrgent || false),
+        is_urgent: shouldCancelUrgent ? false : (client.status === "Further Information Required" ? true : (client.isUrgent || false)),
         created_at: new Date().toISOString()
       }
       
@@ -212,7 +212,7 @@ export default function Home() {
     const old = editingId ? clients.find(c => c.id === editingId) : null
     const saveAgent = user.role === "manager" ? client.agent : user.agent
     const shouldCancelUrgent = ["Granted", "Refused", "Withdrawn"].includes(client.status)
-    const finalIsUrgent = shouldCancelUrgent ? false : (client.isUrgent || false)
+    const finalIsUrgent = shouldCancelUrgent ? false : (client.status === "Further Information Required" ? true : (client.isUrgent || false))
     
     // Auto-fill lodgement date when status becomes Application Lodged
     const today = new Date().toISOString().slice(0, 10)
