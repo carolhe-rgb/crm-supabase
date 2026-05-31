@@ -501,7 +501,6 @@ export default function Home() {
       {activeTab === "clients" && (
         <div className="card">
           <div className="section-head">
-            <h2>客户管理</h2>
             <div className="filters" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
               <input placeholder="搜索客户 / 签证类型 / ID" value={filters.search} onChange={e => setFilters({...filters, search: e.target.value})} />
               <select value={filters.status} onChange={e => setFilters({...filters, status: e.target.value})}>
