@@ -514,9 +514,11 @@ export default function Home() {
               <select value={filters.source} onChange={e => setFilters({...filters, source: e.target.value})}>
                 <option value="All">All Sources</option>{SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
-              <select value={filters.agent} onChange={e => setFilters({...filters, agent: e.target.value})}>
-                <option value="All">All Agents</option>{AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
-              </select>
+              {user.role === "manager" && (
+                <select value={filters.agent} onChange={e => setFilters({...filters, agent: e.target.value})}>
+                  <option value="All">All Agents</option>{AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
+                </select>
+              )}
               <select value={filters.paymentStatus} onChange={e => setFilters({...filters, paymentStatus: e.target.value})}>
                 <option value="All">Payment Status</option>{PAYMENT_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
