@@ -1,6 +1,6 @@
 export const metadata = {
-  title: '留学招生 CRM',
-  description: 'Supabase 版 CRM',
+  title: '移民代理 CRM',
+  description: 'OzSky 移民代理客户管理系统',
 }
 
 export default function RootLayout({ children }) {
