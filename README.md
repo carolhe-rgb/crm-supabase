@@ -31,7 +31,7 @@
 
 ## 申请状态
 
-- Enquiry → Consultation → Document Collection → Ready to Lodge → Lodged → Under Review → Further Information → Decision Made → Granted / Refused / Withdrawn / Appeal
+- Consultation → Contract Signed → Application Lodged → Processing → Further Information Required → Granted / Refused / Withdrawn
 
 ## 部署
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS clients (
   client_name TEXT NOT NULL,
   agent TEXT,
   visa_type TEXT,
-  status TEXT DEFAULT 'Enquiry',
+  status TEXT DEFAULT 'Consultation',
   lodgement_date DATE,
   decision_date DATE,
   service_fee INTEGER DEFAULT 0,
