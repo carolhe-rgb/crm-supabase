@@ -176,6 +176,8 @@ export default function Home() {
     if (USE_MOCK) {
       const saveAgent = user.role === "manager" ? client.agent : user.agent
       const shouldCancelUrgent = ["Granted", "Refused", "Withdrawn"].includes(client.status)
+      const today = new Date().toISOString().slice(0, 10)
+      const autoLodgementDate = (client.status === "Application Lodged" && !client.lodgementDate) ? today : (client.lodgementDate || null)
       const newClient = {
         id: client.id,
         client_name: client.clientName,
@@ -183,7 +185,7 @@ export default function Home() {
         visa_type: client.visaType,
         source: client.source,
         status: client.status,
-        lodgement_date: client.lodgementDate || null,
+        lodgement_date: autoLodgementDate,
         decision_date: client.decisionDate || null,
         service_fee: Number(client.serviceFee || 0),
         payment_status: client.paymentStatus || "Unpaid",
@@ -210,6 +212,10 @@ export default function Home() {
     const saveAgent = user.role === "manager" ? client.agent : user.agent
     const shouldCancelUrgent = ["Granted", "Refused", "Withdrawn"].includes(client.status)
     const finalIsUrgent = shouldCancelUrgent ? false : (client.isUrgent || false)
+    
+    // Auto-fill lodgement date when status becomes Application Lodged
+    const today = new Date().toISOString().slice(0, 10)
+    const autoLodgementDate = (client.status === "Application Lodged" && !client.lodgementDate) ? today : (client.lodgementDate || null)
 
     const payload = {
       id: client.id,
@@ -218,7 +224,7 @@ export default function Home() {
       visa_type: client.visaType,
       source: client.source,
       status: client.status,
-      lodgement_date: client.lodgementDate || null,
+      lodgement_date: autoLodgementDate,
       decision_date: client.decisionDate || null,
       service_fee: Number(client.serviceFee || 0),
       gst_free: client.gstFree || false,

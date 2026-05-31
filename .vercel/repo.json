@@ -1,0 +1,11 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_gsMZ0iw7PYMPDVcnmOd05aUwQ7xC",
+      "name": "crm-supabase",
+      "directory": ".",
+      "orgId": "team_3lAvY4Q1gvX7GGSjKMB0IQ7M"
+    }
+  ]
+}

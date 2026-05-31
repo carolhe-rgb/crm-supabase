@@ -1,0 +1,69 @@
+id,student_name,counsellor,school,course,source,status,intake_date,tuition,bonus,bonus_status,paid_at,notes,created_at,visa_expiry_date,is_urgent
+STU-2026-0019,Shengdan Sun,Jett,WSU、VU MEL、ECU,中教硕士,Xiaohongshu,Offer,,0,500,Unpaid,,学生选择课程和学校中,2026-03-24T04:15:20.993642+00:00,2026-10-09,false
+STU-2026-0017,Meng Luo,Jett,QUT,Master of Teaching Secondary,Xiaohongshu,Enrolled,2026-02-23,0,500,Paid,2026-03-25T01:32:52.294+00:00,,2026-03-24T04:13:21.786349+00:00,2028-03-15,false
+STU-2026-0004,Zhenjiang TIAN,Ming,ALFA,Cer 3 in wall and ceiling lining,Referral,Enrolled,2025-12-15,13500,500,Paid,2026-03-25T01:32:53.172+00:00,,2026-03-23T04:19:54.570723+00:00,,false
+STU-2026-0013,Jiaxi Luo,Jett,SCU,幼教GD+硕士,Xiaohongshu,Offer,2026-07-06,26000,500,Unpaid,,等UQ毕业,2026-03-23T04:31:43.227872+00:00,2026-07-30,true
+STU-2026-0003,Clement Tze Siang YII,David,Alfa,cer3 carpentry,Referral,Enrolled,2025-12-01,13500,500,Paid,2026-03-25T01:32:54.082+00:00,,2026-03-23T03:49:24.165712+00:00,2027-07-09,false
+STU-2026-0015,Fengxia Wang,Jett,QUT、阳光海岸、UQ,护理硕士,Xiaohongshu,Offer,,0,500,Unpaid,,485读，QUT和UQ等英语,2026-03-23T04:34:01.357994+00:00,2029-10-03,true
+STU-2026-0001,ZUO Long,David,ILC,diploma of leadership and management,Referral,Enrolled,2026-03-01,5800,500,Paid,2026-04-22T01:47:25.875+00:00,,2026-03-24T01:08:31.277144+00:00,2028-03-15,false
+STU-2026-0024,Catheri和她男友,Jett,CDU,,Walk-in,Consultation,,0,500,Unpaid,,whv女生+境外男生，职业评估+CDU申请移民课程，咨询中,2026-03-26T00:08:16.679631+00:00,,false
+STU-2026-0006,Chuanhao Chen,Jett,南十字星,社工GC+MASTER,Referral,Offer,2026-10-19,0,500,Unpaid,,等待英语与存款证明补GSS,2026-03-23T04:22:30.549339+00:00,,true
+STU-2026-0034,Zetian Chen,Jett,南十字星,中教GD,Xiaohongshu,Offer,2026-07-06,0,500,Unpaid,,等学生决定是否接,2026-04-28T00:08:49.550535+00:00,,true
+STU-2026-0010,Xiaoran Yu,Jett,西悉尼、麦考瑞,幼教硕士,Xiaohongshu,Lost,,0,500,Unpaid,,西悉尼等审理，麦考瑞有offer。学生说不读了移民太难了,2026-03-23T04:27:57.438868+00:00,2026-11-15,false
+STU-2026-0005,Josphine Mukami Mwenda,Jett,ECU、TAFE QLD、Torrens,护理本科,Referral,Enrolled,2026-07-01,0,500,Paid,2026-04-22T01:47:26.958+00:00,COE到手,2026-03-23T04:21:13.011104+00:00,,false
+STU-2026-0007,Tongshu Yang,Jett,南十字星、ECU,中教GD,Referral,Offer,2026-10-19,26000,500,Unpaid,,SCU已有GDoffer 10月入学,2026-03-23T04:23:34.93801+00:00,2027-03-15,true
+STU-2026-0038,Peiling zhu,Ming,Alliance SA,Cer3 in carpentry,Xiaohongshu,Enrolled,2026-03-10,0,500,Ready for Bonus,,,2026-05-05T23:58:08.21863+00:00,,false
+STU-2026-0033,Anna,Jett,,社工本科,Referral,Consultation,,0,500,Unpaid,,,2026-04-21T04:05:27.873192+00:00,2026-07-26,false
+STU-2026-0008,Ziyu Zhou,Jett,昆士兰大学,Master of Commerce,Referral,Offer,,0,500,Unpaid,,已有con offer等英语和国内毕业,2026-03-23T04:25:13.76768+00:00,,true
+STU-2026-0021,Runsheng CHEN,Ming,Alfa,Cer 3 in carpentry,Xiaohongshu,Enrolled,2025-12-25,13500,500,Paid,2026-03-25T01:32:35.494+00:00,,2026-03-24T04:17:58.385157+00:00,,false
+STU-2026-0020,Tao LU,Ming,ECU,Master of teaching secondary,Xiaohongshu,Enrolled,2026-02-20,37699,500,Paid,2026-03-25T01:32:39.801+00:00,,2026-03-24T04:17:12.012271+00:00,,false
+STU-2026-0002,MA Jinyu,David,ILC,GDM,Referral,Enrolled,2025-12-01,16200,500,Paid,2026-03-25T01:32:44.789+00:00,,2026-03-23T03:48:56.591509+00:00,,false
+STU-2026-0027,Lee,Jett,昆州小学,昆州小学,Xiaohongshu,Lead,,0,500,Unpaid,,推给David和david分,2026-03-30T00:10:37.203085+00:00,,false
+STU-2026-0009,Ivy Talam,Jett,CQU,PhD,Referral,Applied,,0,500,Unpaid,,CQU已递交,2026-03-23T04:26:40.004127+00:00,,true
+STU-2026-0028,XU Churong,David,Griffith Univeristy,PHD 牙医,Referral,Enrolled,2026-02-01,150000,500,Paid,2026-04-08T00:30:14.837+00:00,CSC全奖，学费为预估,2026-04-07T05:45:31.893966+00:00,2030-10-23,false
+STU-2026-0026,Jun YANG ,Ming,QUT,Bachelor of communication,Referral,Enrolled,2026-02-20,37200,500,Paid,2026-04-08T00:30:17.086+00:00,,2026-03-26T00:28:38.842036+00:00,,false
+STU-2026-0025,Guolian LIU,Ming,TAFE WA,Cer3 in carpentry,Xiaohongshu,Enrolled,2026-02-20,28180,500,Paid,2026-04-08T00:30:17.872+00:00,,2026-03-26T00:27:43.087891+00:00,,false
+STU-2026-0016,Roine Kipkemboi,Jett,JCUB,Bachelor of IT,Referral,Lost,2026-05-18,0,500,Unpaid,,转学日期过了，无佣金,2026-03-23T04:35:28.749739+00:00,2027-03-15,false
+STU-2026-0014,Brian的老婆,Jett,未知,护理硕士,Referral,Consultation,,0,500,Unpaid,,SCU\QUT\ECU申请,2026-03-23T04:32:15.314276+00:00,,false
+STU-2026-0023,Bingrui Pan,Jett,Monash University,GC+MASTER打包international relations,Referral,Lost,,0,500,Unpaid,,"第一学期GC读了但是挂科了未进入主课，学生直接转去英国了。佣金paid,2024年的CASE",2026-03-26T00:04:42.20824+00:00,,false
+STU-2026-0012,Xuanqi Dai,Jett,弗林德斯大学,言语治疗硕士,Xiaohongshu,Enrolled,2027-03-01,0,500,Paid,2026-05-06T01:29:26.402+00:00,COE到手,2026-03-23T04:30:30.164984+00:00,,false
+STU-2026-0011,Fengcan He,Jett,JCUB,Bachelor of Commerce,Xiaohongshu,Lost,2026-05-18,0,500,Unpaid,,转学日期过了无佣金,2026-03-23T04:29:34.059448+00:00,2027-09-30,false
+STU-2026-0032,SUN Xiran,David,Browns,PSP 3 week,Referral,Enrolled,2026-03-01,2100,250,Paid,2026-04-22T01:47:20.552+00:00,旅游签体验PSP,2026-04-21T00:57:38.681771+00:00,2028-07-16,false
+STU-2026-0030,Shaoling JING,Ming,SAI,Cer 3 in carpentry,Xiaohongshu,Enrolled,2026-03-20,0,500,Paid,2026-04-22T01:47:22.067+00:00,,2026-04-08T05:57:07.526402+00:00,,false
+STU-2026-0029,Qindong LU,Ming,Leaders,Bachelor of business,Referral,Enrolled,2026-02-06,0,500,Paid,2026-04-22T01:47:23.427+00:00,,2026-04-08T05:56:00.89671+00:00,,false
+STU-2026-0018,Yigao Shen,Jett,UNSW,Master of Engineering,Referral,Enrolled,2026-09-01,0,500,Paid,2026-04-22T01:47:24.889+00:00,Con COE7月毕业换full，签证已下签,2026-03-24T04:14:01.585384+00:00,,false
+STU-2026-0022,宋一帆,Jett,CQU,博士土木工程,Friend,Applied,,0,500,Unpaid,,EOI approved 等offer,2026-03-24T05:43:33.812443+00:00,,true
+STU-2026-0036,Ziyi Qin,Ming,ECU,GD in earlychildhood,Xiaohongshu,Enrolled,2026-02-20,0,500,Paid,2026-05-06T01:29:25.548+00:00,485 non coe,2026-05-05T23:55:47.51504+00:00,,false
+STU-2026-0035,Jiaxin Liu,Jett,南十字星,幼教,Referral,Applied,2026-07-06,0,500,Unpaid,,已申请,2026-04-30T04:16:39.102861+00:00,2026-08-13,true
+STU-2026-0037,Xinying CHANG,Ming,ECU,Master of secondary teaching,Referral,Enrolled,,0,500,Paid,2026-05-06T01:29:24.809+00:00,485 non coe,2026-05-05T23:56:24.582259+00:00,,false
+STU-2026-0044,KANG Hengning,David,SIIT,advanced diploma of translating,Referral,Enrolled,2026-01-01,8000,500,Unpaid,,,2026-05-06T00:04:24.731377+00:00,2027-04-14,false
+STU-2026-0042,Jingzhi QIN,Ming,IMC perth,Master of marketing,Xiaohongshu,Enrolled,,0,500,Unpaid,,,2026-05-06T00:02:26.478877+00:00,,false
+STU-2026-0043,shengxuan LI,Ming,"UQ,GU,ECU,curtin,cdu, flinders, La Trobe",Master of teaching,Referral,Consultation,,0,500,Unpaid,,,2026-05-06T00:03:15.197211+00:00,,false
+STU-2026-0045,Jiawei MU,Ming,Gamma,Cer 3 in painting+ Cer 4,Xiaohongshu,Consultation,,0,500,Unpaid,,,2026-05-06T00:04:34.397383+00:00,,false
+STU-2026-0039,Jiawen LIANG,Ming,SCU,GD in secondary teaching,Xiaohongshu,Enrolled,2026-02-20,0,500,Ready for Bonus,,485 non coe,2026-05-05T23:58:50.411275+00:00,,false
+STU-2026-0031,Zixuan Lin和她妈妈（海）,Jett,Stretton State College,EQI7-12年级,Xiaohongshu,Consultation,2027-01-01,0,500,Unpaid,,已递交申请,2026-04-21T00:25:00.729296+00:00,2027-03-15,true
+STU-2026-0046,Chunguang YAN,Ming,Valley,Cer 3 in carpentry,Referral,Enrolled,,0,500,Unpaid,,Gu 同时在读,2026-05-06T00:05:14.573417+00:00,,false
+STU-2026-0047,Yan GOU,Ming,UQ,Master of teaching secondary,Referral,Consultation,2027-02-20,0,500,Unpaid,,,2026-05-06T00:05:46.73168+00:00,,false
+STU-2026-0049,Juexian ZENG,Ming,SIIT,AD Translating,Xiaohongshu,Enrolled,,0,500,Unpaid,,,2026-05-06T00:06:22.208484+00:00,,false
+STU-2026-0052,Phan Ngoc Tuyen NGUYEN,David,CB,Cer 3 individual support,Referral,Enrolled,2026-04-01,7498,500,Unpaid,,,2026-05-06T00:15:03.804554+00:00,2028-03-15,false
+STU-2026-0053,Sarah O'Brien,David,ILC,cer2 in work place skills,Referral,Enrolled,2026-05-01,3200,250,Unpaid,,,2026-05-06T00:16:18.889937+00:00,,false
+STU-2026-0054,SUN Yashu,David,Gamma,cer 3 in painting,Referral,Deposit Paid,2026-07-01,13500,500,Unpaid,,,2026-05-06T00:18:31.24877+00:00,,false
+STU-2026-0055,DAI Xinlong,David,GLI,MBA,Referral,Deposit Paid,2026-07-01,28000,500,Unpaid,,,2026-05-06T00:19:53.356717+00:00,,false
+STU-2026-0048,WANG Ruoyang,David,QUT,Bachelor of business,Referral,Enrolled,2026-02-01,35000,500,Unpaid,,,2026-05-06T00:06:00.166572+00:00,2028-03-15,false
+STU-2026-0050,XU Wanqian,David,IMC,Master of marketing,Referral,Enrolled,2026-03-01,30000,500,Unpaid,,,2026-05-06T00:11:16.304787+00:00,2027-08-12,false
+STU-2026-0051,TIAN Xiujun,David,ILC,GDM,Referral,Enrolled,2026-04-01,16000,500,Unpaid,,,2026-05-06T00:12:13.483938+00:00,,false
+STU-2026-0041,Brandon TSANG,David,ILC,Graduate diploma of management,Referral,Enrolled,2026-01-01,16000,500,Paid,2026-05-06T01:29:21.639+00:00,,2026-05-06T00:00:47.651382+00:00,2026-08-30,false
+STU-2026-0040,LI Jiabin,David,Alfa college,cer 3 carpentry,Referral,Enrolled,2026-01-01,13500,500,Paid,2026-05-06T01:29:23.751+00:00,,2026-05-05T23:59:26.684989+00:00,,false
+STU-2026-0056,Zhenpeng Li,Jett,"维州的蓝领Orange,Alpha,Holmesglen,GET",,Referral,Consultation,2026-07-06,0,500,Unpaid,,6.6号前申请485，然后485读蓝领,2026-05-11T00:38:29.768201+00:00,2026-06-06,true
+STU-2026-0057,Jiaming LIU,Ming,UWA,master of architecture,Referral,Enrolled,2026-07-20,0,500,Unpaid,,,2026-05-13T00:36:43.017914+00:00,,false
+STU-2026-0059,"Shumeng, Wu",Ming,UQ,Master of Communication,Referral,Applied,2026-07-20,0,500,Unpaid,,,2026-05-13T00:38:11.731545+00:00,,false
+STU-2026-0058,Dingming YANG,Ming,UQ,Master of Business,Xiaohongshu,Applied,2026-07-20,0,500,Unpaid,,,2026-05-13T00:37:29.551486+00:00,,false
+STU-2026-0060,Haozhe ZHANG,Ming,Alfa,Cer3 in carpentry,Referral,Enrolled,2026-05-05,0,500,Unpaid,,,2026-05-13T00:39:02.746185+00:00,,false
+STU-2026-0061,Jiarui WANG,Ming,USYD Uom UQ,Bachelor,Referral,Applied,2027-02-20,0,500,Unpaid,,,2026-05-13T00:39:36.896947+00:00,,false
+STU-2026-0062,Linhe YE,Ming,UQ,Bachelor of movement,Xiaohongshu,Offer,2027-02-20,0,500,Unpaid,,,2026-05-13T00:40:08.372745+00:00,,false
+STU-2026-0063,Yuhe ZHANG,Ming,Curtin ECU,master of teaching,Xiaohongshu,Offer,2026-08-20,0,500,Unpaid,,,2026-05-13T00:40:48.467651+00:00,,false
+STU-2026-0064,zhiwei CHEN,Ming,WSU,Master of Hospitality,Xiaohongshu,Enrolled,,0,500,Unpaid,,,2026-05-13T00:41:15.531213+00:00,,false
+STU-2026-0065,Ying QIU,Ming,Macallan College,Cookery Package,Xiaohongshu,Enrolled,,0,500,Unpaid,,,2026-05-13T00:41:46.718511+00:00,,false
+STU-2026-0066,Lee Hong Chan,Ming,ACMi,Draftperson,Xiaohongshu,Enrolled,2026-03-26,0,500,Unpaid,,,2026-05-13T00:42:24.630852+00:00,,false
+STU-2026-0067,Yifan Bai,Jett,SCU,中教GD,Referral,Applied,2026-07-06,0,500,Unpaid,,485读NSW中教GD,2026-05-14T02:09:37.34173+00:00,,true
+STU-2026-0068,Xiaoxin Ye,Jett,ECU 科廷,科廷中教、ECU幼教,Xiaohongshu,Applied,2026-08-31,0,500,Unpaid,,,2026-05-18T00:22:59.903813+00:00,2026-06-30,true
