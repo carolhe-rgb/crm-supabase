@@ -744,10 +744,13 @@ export default function Home() {
               </div>
               <div className="field"><label>Lodgement date</label><input type="date" value={formData.lodgementDate} onChange={e => setFormData({...formData, lodgementDate: e.target.value})} /></div>
               <div className="field"><label>Due date</label><input type="date" value={formData.dueDate} onChange={e => setFormData({...formData, dueDate: e.target.value})} /></div>
-              <div className="field"><label>Service fee (AUD)</label><input type="number" value={formData.serviceFee} onChange={e => setFormData({...formData, serviceFee: e.target.value})} /></div>
-              <div className="field" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <input type="checkbox" checked={formData.gstFree} onChange={e => setFormData({...formData, gstFree: e.target.checked})} style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
+              <div className="field" style={{ display: 'flex', alignItems: 'flex-end', gap: '12px' }}>
+                <div style={{ flex: 1 }}>
+                  <label>Service fee (AUD)</label>
+                  <input type="number" value={formData.serviceFee} onChange={e => setFormData({...formData, serviceFee: e.target.value})} />
+                </div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', paddingBottom: '6px', whiteSpace: 'nowrap' }}>
+                  <input type="checkbox" checked={formData.gstFree} onChange={e => setFormData({...formData, gstFree: e.target.checked})} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
                   <span style={{ color: formData.gstFree ? '#10b981' : '#475569', fontWeight: formData.gstFree ? '600' : '400' }}>GST Free</span>
                 </label>
               </div>
