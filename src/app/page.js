@@ -45,6 +45,8 @@ const VISA_TYPES = [
   "Subclass 445 - Dependent Child (Temporary)",
   "Subclass 102 - Adoption",
   "Subclass 117 - Orphan Relative",
+  "Subclass 835 - Remaining Relative",
+  "Subclass 115 - Remaining Relative (Offshore)",
   "Subclass 010 - Bridging Visa A",
   "Subclass 020 - Bridging Visa B",
   "Subclass 030 - Bridging Visa C",
