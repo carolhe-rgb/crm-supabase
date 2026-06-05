@@ -181,8 +181,9 @@ export default function Home() {
       const today = new Date().toISOString().slice(0, 10)
       const autoLodgementDate = (client.status === "Application Lodged" && !client.lodgementDate) ? today : (client.lodgementDate || null)
       const autoDueDate = (client.status === "Further Information Required" && !client.dueDate) ? new Date(Date.now() + 28*86400000).toISOString().slice(0, 10) : (client.dueDate || null)
+      const newId = client.id || await generateClientID()
       const newClient = {
-        id: client.id,
+        id: newId,
         client_name: client.clientName,
         agent: saveAgent,
         visa_type: client.visaType,
@@ -221,8 +222,11 @@ export default function Home() {
     const autoLodgementDate = (client.status === "Application Lodged" && !client.lodgementDate) ? today : (client.lodgementDate || null)
     const autoDueDate = (client.status === "Further Information Required" && !client.dueDate) ? new Date(Date.now() + 28*86400000).toISOString().slice(0, 10) : (client.dueDate || null)
 
+    // 新增记录时，从数据库查询生成唯一ID
+    const finalId = editingId ? client.id : (client.id || await generateClientID())
+
     const payload = {
-      id: client.id,
+      id: finalId,
       client_name: client.clientName,
       agent: saveAgent,
       visa_type: client.visaType,
@@ -356,10 +360,17 @@ export default function Home() {
     const year = new Date().getFullYear()
     const regex = new RegExp(`^IMM-${year}-(\\d{4})$`)
     let maxNum = 0
-    clients.forEach(c => {
-      const m = String(c.id || "").match(regex)
-      if (m) maxNum = Math.max(maxNum, Number(m[1]))
-    })
+    // 从数据库查询最新ID，避免并发冲突
+    const { data } = await supabase.from('clients').select('id')
+      .ilike('id', `IMM-${year}-%`)
+      .order('id', { ascending: false })
+      .limit(100)
+    if (data) {
+      data.forEach(c => {
+        const m = String(c.id || "").match(regex)
+        if (m) maxNum = Math.max(maxNum, Number(m[1]))
+      })
+    }
     return `IMM-${year}-${String(maxNum + 1).padStart(4, "0")}`
   }
 
@@ -381,9 +392,8 @@ export default function Home() {
         notes: c.notes || "", isUrgent: c.is_urgent || false
       })
     } else {
-      const newId = await generateClientID()
       setFormData({
-        id: newId, clientName: "", agent: user.role === "manager" ? AGENTS[0] : user.agent,
+        id: "", clientName: "", agent: user.role === "manager" ? AGENTS[0] : user.agent,
         visaType: "", source: "Walk-in / Call-in", status: "Consultation",
         lodgementDate: "", dueDate: "", serviceFee: "", gstFree: false,
         paymentStatus: "Unpaid", notes: "", isUrgent: false
