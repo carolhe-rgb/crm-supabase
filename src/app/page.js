@@ -571,8 +571,8 @@ export default function Home() {
             </div>
           )}
 
-          <div style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: '12px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', border: 'none', minWidth: '1100px' }}>
+          <div style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: '12px', overflow: 'hidden' }}>
+            <table style={{ width: '100%', border: 'none' }}>
               <thead>
                 <tr>
                   <th style={{minWidth: '90px', padding: '8px 6px'}}>Case ID</th>
