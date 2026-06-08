@@ -455,17 +455,20 @@ export default function Home() {
   if (!isLoggedIn) {
     return (
       <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-        <div className="card" style={{ maxWidth: '400px', width: '100%', padding: '32px' }}>
+        <div className="card" style={{ maxWidth: '400px', width: '100%', padding: '32px', overflow: 'hidden' }}>
           <h1 style={{ textAlign: 'center', marginBottom: '8px' }}>移民代理 CRM</h1>
           <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '24px' }}>OzSky Immigration</p>
           <form onSubmit={handleLogin}>
             <div className="field" style={{ marginBottom: '16px' }}>
               <label>用户名</label>
-              <select value={loginForm.name} onChange={e => setLoginForm({...loginForm, name: e.target.value})} style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0' }} required>
-                <option value="">请选择</option>
-                <option value="Manager">Manager</option>
-                {AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
-              </select>
+              <div style={{ position: 'relative' }}>
+                <select value={loginForm.name} onChange={e => setLoginForm({...loginForm, name: e.target.value})} style={{ width: '100%', padding: '8px 36px 8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none', background: '#fff' }} required>
+                  <option value="">请选择</option>
+                  <option value="Manager">Manager</option>
+                  {AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
+                </select>
+                <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b', fontSize: '12px' }}>▼</span>
+              </div>
             </div>
             <div className="field" style={{ marginBottom: '24px' }}>
               <label>密码</label>
@@ -580,7 +583,7 @@ export default function Home() {
                   <th style={{minWidth: '110px', padding: '8px 6px'}}>Dates</th>
                   <th style={{minWidth: '100px', padding: '8px 6px'}}>Fee / Payment</th>
                   <th style={{minWidth: '130px', padding: '8px 6px'}}>Notes</th>
-                  <th style={{minWidth: '200px', padding: '8px 6px'}}>Actions</th>
+                  <th style={{minWidth: '160px', padding: '8px 6px'}}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -618,11 +621,11 @@ export default function Home() {
                         {c.notes ? (c.notes.length > 80 ? c.notes.substring(0, 80) + '...' : c.notes) : <span style={{color: '#94a3b8'}}>-</span>}
                       </div>
                     </td>
-                    <td style={{padding: '6px', minWidth: '200px'}}>
-                      <div style={{display: 'flex', gap: '4px', flexWrap: 'nowrap', whiteSpace: 'nowrap'}}>
-                        <button className="small-btn" onClick={() => openModal(c.id)} style={{padding: '5px 8px', fontSize: '12px', whiteSpace: 'nowrap'}}>Edit</button>
-                        <button className="small-btn" onClick={() => toggleUrgent(c.id)} style={{padding: '5px 8px', fontSize: '12px', whiteSpace: 'nowrap', background: !!c.is_urgent ? '#fef2f2' : '#fff', borderColor: !!c.is_urgent ? '#ef4444' : '#e2e8f0', color: !!c.is_urgent ? '#dc2626' : '#64748b'}} title={!!c.is_urgent ? "取消紧急标记" : "标记为紧急"}>{!!c.is_urgent ? '🔥 取消' : '标记'}</button>
-                        {user.role === "manager" && <button className="small-btn danger" onClick={() => deleteClient(c.id)} style={{padding: '5px 8px', fontSize: '12px', whiteSpace: 'nowrap'}}>Delete</button>}
+                    <td style={{padding: '6px'}}>
+                      <div style={{display: 'flex', gap: '4px', flexWrap: 'wrap'}}>
+                        <button className="small-btn" onClick={() => openModal(c.id)}>Edit</button>
+                        <button className="small-btn" onClick={() => toggleUrgent(c.id)} style={{background: !!c.is_urgent ? '#fef2f2' : '#fff', borderColor: !!c.is_urgent ? '#ef4444' : '#e2e8f0', color: !!c.is_urgent ? '#dc2626' : '#64748b'}} title={!!c.is_urgent ? "取消紧急标记" : "标记为紧急"}>{!!c.is_urgent ? '🔥 取消紧急' : '标记紧急'}</button>
+                        {user.role === "manager" && <button className="small-btn danger" onClick={() => deleteClient(c.id)}>Delete</button>}
                       </div>
                     </td>
                   </tr>
