@@ -571,8 +571,8 @@ export default function Home() {
             </div>
           )}
 
-          <div style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: '12px', overflow: 'hidden' }}>
-            <table style={{ width: '100%', border: 'none' }}>
+          <div style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: '12px', overflowX: 'auto' }}>
+            <table style={{ width: '100%', border: 'none', minWidth: '1100px' }}>
               <thead>
                 <tr>
                   <th style={{minWidth: '90px', padding: '8px 6px'}}>Case ID</th>
@@ -583,7 +583,7 @@ export default function Home() {
                   <th style={{minWidth: '110px', padding: '8px 6px'}}>Dates</th>
                   <th style={{minWidth: '100px', padding: '8px 6px'}}>Fee / Payment</th>
                   <th style={{minWidth: '130px', padding: '8px 6px'}}>Notes</th>
-                  <th style={{minWidth: '220px', padding: '8px 6px'}}>Actions</th>
+                  <th style={{minWidth: '280px', padding: '8px 6px'}}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -621,8 +621,8 @@ export default function Home() {
                         {c.notes ? (c.notes.length > 80 ? c.notes.substring(0, 80) + '...' : c.notes) : <span style={{color: '#94a3b8'}}>-</span>}
                       </div>
                     </td>
-                    <td style={{padding: '6px', minWidth: '220px'}}>
-                      <div style={{display: 'flex', gap: '4px', flexWrap: 'nowrap'}}>
+                    <td style={{padding: '6px', minWidth: '280px'}}>
+                      <div style={{display: 'flex', gap: '4px', flexWrap: 'wrap'}}>
                         <button className="small-btn" onClick={() => openModal(c.id)} style={{padding: '5px 8px', fontSize: '12px', whiteSpace: 'nowrap'}}>Edit</button>
                         <button className="small-btn" onClick={() => toggleUrgent(c.id)} style={{padding: '5px 8px', fontSize: '12px', whiteSpace: 'nowrap', background: !!c.is_urgent ? '#fef2f2' : '#fff', borderColor: !!c.is_urgent ? '#ef4444' : '#e2e8f0', color: !!c.is_urgent ? '#dc2626' : '#64748b'}} title={!!c.is_urgent ? "取消紧急标记" : "标记为紧急"}>{!!c.is_urgent ? '🔥 取消紧急' : '标记紧急'}</button>
                         {user.role === "manager" && <button className="small-btn danger" onClick={() => deleteClient(c.id)} style={{padding: '5px 8px', fontSize: '12px', whiteSpace: 'nowrap'}}>Delete</button>}
