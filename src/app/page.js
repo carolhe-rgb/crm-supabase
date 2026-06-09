@@ -481,10 +481,10 @@ export default function Home() {
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '56px' }}>
               <div style={{ width: '44px', height: '44px', overflow: 'hidden', borderRadius: '8px', flexShrink: 0 }}>
-                <img src="/logo.png" alt="Ozsky" style={{ height: '44px', maxWidth: 'none' }} />
+                <img src="/logo.png" alt="OzSky" style={{ height: '44px', maxWidth: 'none' }} />
               </div>
               <div>
-                <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>Ozsky International</div>
+                <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>OzSky International</div>
                 <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.65)', marginTop: '3px', letterSpacing: '0.5px' }}>Education and Migration Agency</div>
               </div>
             </div>
@@ -503,7 +503,7 @@ export default function Home() {
           {/* 底部内容 */}
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
-              <span>© 2025 Ozsky International</span>
+              <span>© 2025 OzSky International</span>
               <span style={{ width: '4px', height: '4px', background: 'rgba(255,255,255,0.3)', borderRadius: '50%', display: 'inline-block' }} />
               <span>All rights reserved</span>
             </div>
@@ -625,7 +625,7 @@ export default function Home() {
                 fontSize: '13px',
                 color: '#94a3b8',
               }}>
-                Ozsky Immigration CRM System
+                OzSky Immigration CRM System
               </div>
             </form>
           </div>
