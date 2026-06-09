@@ -481,7 +481,7 @@ export default function Home() {
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '56px' }}>
               <div style={{ width: '44px', height: '44px', overflow: 'hidden', borderRadius: '8px', flexShrink: 0 }}>
-                <img src="/logo.png" alt="OzSky" style={{ height: '44px', maxWidth: 'none' }} />
+                <img src="/logo.png" alt="Ozsky" style={{ height: '44px', maxWidth: 'none', filter: 'brightness(0) invert(1)' }} />
               </div>
               <div>
                 <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>Ozsky International</div>
