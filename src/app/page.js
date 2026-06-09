@@ -30,6 +30,7 @@ const VISA_TYPES = [
   "Subclass 500 - Student",
   "Subclass 189 - Skilled Independent",
   "Subclass 190 - Skilled Nominated",
+  "Subclass 191 - Skilled Regional Permanent",
   "Subclass 491 - Skilled Regional",
   "Subclass 482 - Temporary Skill Shortage",
   "Subclass 186 - Employer Nomination",
