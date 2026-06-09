@@ -500,7 +500,7 @@ export default function Home() {
           {/* 底部内容 */}
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
-              <span>© 2025 OzSky International</span>
+              <span>© 2025 Ozsky International</span>
               <span style={{ width: '4px', height: '4px', background: 'rgba(255,255,255,0.3)', borderRadius: '50%', display: 'inline-block' }} />
               <span>All rights reserved</span>
             </div>
@@ -622,7 +622,7 @@ export default function Home() {
                 fontSize: '13px',
                 color: '#94a3b8',
               }}>
-                OzSky Immigration CRM System
+                Ozsky Immigration CRM System
               </div>
             </form>
           </div>
