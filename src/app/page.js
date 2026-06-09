@@ -462,8 +462,8 @@ export default function Home() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: '48px',
-          background: 'linear-gradient(135deg, #1a365d 0%, #2c5282 40%, #4a7c9b 100%)',
+          padding: '64px 80px',
+          background: 'linear-gradient(135deg, #0f2744 0%, #1a365d 30%, #2c5282 70%, #4a7c9b 100%)',
           position: 'relative',
           overflow: 'hidden',
         }}>
@@ -474,32 +474,45 @@ export default function Home() {
             backgroundImage: 'url(/login-bg.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center bottom',
-            opacity: 0.15,
+            opacity: 0.12,
           }} />
           
           {/* 顶部内容 */}
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '40px' }}>
-              <img src="/logo.png" alt="OzSky" style={{ height: '48px' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '56px' }}>
+              <div style={{
+                background: 'rgba(255,255,255,0.1)',
+                borderRadius: '12px',
+                padding: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backdropFilter: 'blur(8px)',
+              }}>
+                <img src="/logo.png" alt="OzSky" style={{ height: '44px', filter: 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.2))' }} />
+              </div>
               <div>
-                <div style={{ fontSize: '24px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px' }}>OzSky International</div>
-                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>Education and Migration Agency</div>
+                <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>OzSky International</div>
+                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.65)', marginTop: '3px', letterSpacing: '0.5px' }}>Education and Migration Agency</div>
               </div>
             </div>
-            <h1 style={{ fontSize: '42px', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: '24px', maxWidth: '480px' }}>
+            
+            <div style={{ width: '48px', height: '3px', background: 'rgba(255,255,255,0.4)', borderRadius: '2px', marginBottom: '28px' }} />
+            
+            <h1 style={{ fontSize: '38px', fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: '20px', maxWidth: '480px', letterSpacing: '-0.5px' }}>
               移民案件<br />管理系统
             </h1>
-            <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, maxWidth: '420px' }}>
-              高效管理客户案件，追踪签证申请进度，<br />
-              让您的移民服务更加专业、有序。
+            <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, maxWidth: '420px' }}>
+              高效管理客户案件，追踪签证申请进度<br />
+              让您的移民服务更加专业、有序
             </p>
           </div>
           
           {/* 底部内容 */}
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
               <span>© 2025 OzSky International</span>
-              <span style={{ margin: '0 8px' }}>·</span>
+              <span style={{ width: '4px', height: '4px', background: 'rgba(255,255,255,0.3)', borderRadius: '50%', display: 'inline-block' }} />
               <span>All rights reserved</span>
             </div>
           </div>
