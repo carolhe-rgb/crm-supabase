@@ -480,9 +480,7 @@ export default function Home() {
           {/* 顶部内容 */}
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '56px' }}>
-              <div style={{ width: '44px', height: '44px', overflow: 'hidden', borderRadius: '8px', flexShrink: 0 }}>
-                <img src="/logo.png" alt="Ozsky" style={{ height: '44px', maxWidth: 'none', filter: 'brightness(0) invert(1)' }} />
-              </div>
+              <img src="/logo.png" alt="Ozsky" style={{ height: '44px', filter: 'brightness(0) invert(1)' }} />
               <div>
                 <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>Ozsky International</div>
                 <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.65)', marginTop: '3px', letterSpacing: '0.5px' }}>Education and Migration Agency</div>
