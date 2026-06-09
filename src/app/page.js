@@ -479,12 +479,8 @@ export default function Home() {
           
           {/* 顶部内容 */}
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '40px' }}>
-              <img src="/logo.png" alt="OzSky" style={{ height: '48px', filter: 'brightness(0) invert(1)' }} />
-              <div>
-                <div style={{ fontSize: '24px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px' }}>OzSky International</div>
-                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>Education and Migration Agency</div>
-              </div>
+            <div style={{ marginBottom: '40px' }}>
+              <img src="/logo.png" alt="OzSky" style={{ height: '72px' }} />
             </div>
             <h1 style={{ fontSize: '42px', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: '24px', maxWidth: '480px' }}>
               专业移民<br />代理管理系统
