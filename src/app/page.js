@@ -553,6 +553,8 @@ export default function Home() {
             background: linear-gradient(135deg, #0f2744 0%, #1a365d 30%, #2c5282 70%, #4a7c9b 100%);
             position: relative;
             overflow: hidden;
+            max-height: 100vh;
+            overflow-y: auto;
           }
           .login-bg {
             position: absolute;
@@ -747,6 +749,51 @@ export default function Home() {
             text-align: center;
             font-size: 13px;
             color: #94a3b8;
+          }
+
+          /* 小笔记本 / 短屏幕 */
+          @media (max-width: 1366px), (max-height: 768px) {
+            .login-brand {
+              padding: 32px 40px;
+            }
+            .login-brand-logo {
+              margin-bottom: 24px;
+            }
+            .login-brand-logo img {
+              height: 36px;
+            }
+            .login-brand-title {
+              font-size: 18px;
+            }
+            .login-brand-subtitle {
+              font-size: 12px;
+            }
+            .login-brand-headline {
+              font-size: 26px;
+              margin-bottom: 12px;
+            }
+            .login-brand-desc {
+              font-size: 13px;
+              line-height: 1.6;
+            }
+            .login-brand-desc br {
+              display: none;
+            }
+            .login-form-area {
+              padding: 24px 32px;
+            }
+            .login-card {
+              padding: 28px;
+            }
+            .login-card-header {
+              margin-bottom: 20px;
+            }
+            .login-card-header h2 {
+              font-size: 24px;
+            }
+            .login-field {
+              margin-bottom: 14px;
+            }
           }
 
           /* 平板端 */
