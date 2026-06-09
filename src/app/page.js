@@ -623,7 +623,7 @@ export default function Home() {
                 fontSize: '13px',
                 color: '#94a3b8',
               }}>
-                OzSky Immigration CRM System
+                Ozsky Immigration CRM System
               </div>
             </form>
           </div>
