@@ -489,7 +489,7 @@ export default function Home() {
                 justifyContent: 'center',
                 backdropFilter: 'blur(8px)',
               }}>
-                <img src="/logo.png" alt="OzSky" style={{ height: '44px', filter: 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.2))' }} />
+                <img src="/logo.png" alt="OzSky" style={{ height: '44px', filter: 'none' }} />
               </div>
               <div>
                 <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>OzSky International</div>
