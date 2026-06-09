@@ -455,30 +455,184 @@ export default function Home() {
 
   if (!isLoggedIn) {
     return (
-      <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-        <div className="card" style={{ maxWidth: '400px', width: '100%', padding: '32px', overflow: 'hidden' }}>
-          <h1 style={{ textAlign: 'center', marginBottom: '8px' }}>移民代理 CRM</h1>
-          <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '24px' }}>OzSky Immigration</p>
-          <form onSubmit={handleLogin}>
-            <div className="field" style={{ marginBottom: '16px' }}>
-              <label>用户名</label>
-              <div style={{ position: 'relative' }}>
-                <select value={loginForm.name} onChange={e => setLoginForm({...loginForm, name: e.target.value})} style={{ width: '100%', padding: '8px 36px 8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none', background: '#fff' }} required>
-                  <option value="">请选择</option>
-                  <option value="Manager">Manager</option>
-                  {AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
-                </select>
-                <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b', fontSize: '12px' }}>▼</span>
+      <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+        {/* 左侧品牌区域 */}
+        <div style={{
+          flex: '1 1 55%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '48px',
+          background: 'linear-gradient(135deg, #1a365d 0%, #2c5282 40%, #4a7c9b 100%)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          {/* 背景图 */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'url(/login-bg.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center bottom',
+            opacity: 0.15,
+          }} />
+          
+          {/* 顶部内容 */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '40px' }}>
+              <img src="/logo.png" alt="OzSky" style={{ height: '48px', filter: 'brightness(0) invert(1)' }} />
+              <div>
+                <div style={{ fontSize: '24px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px' }}>OzSky International</div>
+                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>Education and Migration Agency</div>
               </div>
             </div>
-            <div className="field" style={{ marginBottom: '24px' }}>
-              <label>密码</label>
-              <input type="password" placeholder="输入密码" value={loginForm.password} onChange={e => setLoginForm({...loginForm, password: e.target.value})} style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0' }} required />
+            <h1 style={{ fontSize: '42px', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: '24px', maxWidth: '480px' }}>
+              专业移民<br />代理管理系统
+            </h1>
+            <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, maxWidth: '420px' }}>
+              高效管理客户案件，追踪签证申请进度，<br />
+              让您的移民服务更加专业、有序。
+            </p>
+          </div>
+          
+          {/* 底部内容 */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
+              <span>© 2025 OzSky International</span>
+              <span style={{ margin: '0 8px' }}>·</span>
+              <span>All rights reserved</span>
             </div>
-            {loginError && <div style={{ color: '#dc2626', marginBottom: '16px', textAlign: 'center' }}>{loginError}</div>}
-            <button type="submit" className="btn" style={{ width: '100%' }}>登录</button>
-          </form>
+          </div>
         </div>
+
+        {/* 右侧登录区域 */}
+        <div style={{
+          flex: '1 1 45%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px',
+          background: '#f8fafc',
+        }}>
+          <div style={{
+            width: '100%',
+            maxWidth: '420px',
+            background: '#fff',
+            borderRadius: '16px',
+            padding: '40px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)',
+          }}>
+            <div style={{ marginBottom: '32px' }}>
+              <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#1e293b', marginBottom: '8px' }}>欢迎登录</h2>
+              <p style={{ fontSize: '14px', color: '#64748b' }}>请使用您的账户信息登录系统</p>
+            </div>
+
+            <form onSubmit={handleLogin}>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>用户</label>
+                <div style={{ position: 'relative' }}>
+                  <select
+                    value={loginForm.name}
+                    onChange={e => setLoginForm({...loginForm, name: e.target.value})}
+                    style={{
+                      width: '100%',
+                      padding: '12px 40px 12px 16px',
+                      borderRadius: '10px',
+                      border: '1px solid #e2e8f0',
+                      fontSize: '15px',
+                      color: '#1e293b',
+                      background: '#fff',
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      cursor: 'pointer',
+                    }}
+                    required
+                  >
+                    <option value="">请选择用户</option>
+                    <option value="Manager">Manager</option>
+                    {AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
+                  </select>
+                  <span style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#94a3b8', fontSize: '10px' }}>▼</span>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>密码</label>
+                <input
+                  type="password"
+                  placeholder="输入密码"
+                  value={loginForm.password}
+                  onChange={e => setLoginForm({...loginForm, password: e.target.value})}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    borderRadius: '10px',
+                    border: '1px solid #e2e8f0',
+                    fontSize: '15px',
+                    color: '#1e293b',
+                    outline: 'none',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => e.target.style.borderColor = '#2563eb'}
+                  onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+                  required
+                />
+              </div>
+
+              {loginError && (
+                <div style={{
+                  padding: '12px 16px',
+                  background: '#fef2f2',
+                  borderRadius: '8px',
+                  color: '#dc2626',
+                  fontSize: '14px',
+                  marginBottom: '20px',
+                  textAlign: 'center',
+                }}>
+                  {loginError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  background: '#2563eb',
+                  color: '#fff',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => e.target.style.background = '#1d4ed8'}
+                onMouseLeave={e => e.target.style.background = '#2563eb'}
+              >
+                登录
+              </button>
+
+              <div style={{
+                marginTop: '24px',
+                textAlign: 'center',
+                fontSize: '13px',
+                color: '#94a3b8',
+              }}>
+                OzSky Immigration CRM System
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* 响应式：小屏幕时隐藏左侧 */}
+        <style>{`
+          @media (max-width: 768px) {
+            .login-split > div:first-child { display: none !important; }
+            .login-split > div:last-child { flex: 1 1 100% !important; }
+          }
+        `}</style>
       </div>
     )
   }
