@@ -462,7 +462,7 @@ export default function Home() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: '64px 80px',
+          padding: '80px 100px',
           background: 'linear-gradient(135deg, #0f2744 0%, #1a365d 30%, #2c5282 70%, #4a7c9b 100%)',
           position: 'relative',
           overflow: 'hidden',
@@ -500,7 +500,7 @@ export default function Home() {
             <div style={{ width: '48px', height: '3px', background: 'rgba(255,255,255,0.4)', borderRadius: '2px', marginBottom: '28px' }} />
             
             <h1 style={{ fontSize: '38px', fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: '20px', maxWidth: '480px', letterSpacing: '-0.5px' }}>
-              移民案件<br />管理系统
+              移民案件管理系统
             </h1>
             <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, maxWidth: '420px' }}>
               高效管理客户案件，追踪签证申请进度<br />
