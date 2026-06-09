@@ -455,190 +455,366 @@ export default function Home() {
 
   if (!isLoggedIn) {
     return (
-      <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <div className="login-page">
         {/* 左侧品牌区域 */}
-        <div style={{
-          flex: '1 1 55%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: '80px 100px',
-          background: 'linear-gradient(135deg, #0f2744 0%, #1a365d 30%, #2c5282 70%, #4a7c9b 100%)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}>
-          {/* 背景图 */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'url(/login-bg.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center bottom',
-            opacity: 0.12,
-          }} />
-          
-          {/* 顶部内容 */}
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '56px' }}>
-              <img src="/logo.png" alt="Ozsky" style={{ height: '44px', filter: 'brightness(0) invert(1)' }} />
-              <div>
-                <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>Ozsky International</div>
-                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.65)', marginTop: '3px', letterSpacing: '0.5px' }}>Education and Migration Agency</div>
+        <div className="login-brand">
+          <div className="login-bg" />
+          <div className="login-brand-content">
+            <div className="login-brand-top">
+              <div className="login-brand-logo">
+                <img src="/logo.png" alt="Ozsky" />
+                <div className="login-brand-text">
+                  <div className="login-brand-title">Ozsky International</div>
+                  <div className="login-brand-subtitle">Education and Migration Agency</div>
+                </div>
               </div>
+              <h1 className="login-brand-headline">移民案件管理系统</h1>
+              <p className="login-brand-desc">
+                高效管理客户案件，追踪签证申请进度<br />
+                让您的移民服务更加专业、有序
+              </p>
             </div>
-            
-
-            <h1 style={{ fontSize: '38px', fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: '20px', maxWidth: '480px', letterSpacing: '-0.5px' }}>
-              移民案件管理系统
-            </h1>
-            <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, maxWidth: '420px' }}>
-              高效管理客户案件，追踪签证申请进度<br />
-              让您的移民服务更加专业、有序
-            </p>
-          </div>
-          
-          {/* 底部内容 */}
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
+            <div className="login-brand-bottom">
               <span>© 2025 Ozsky International</span>
-              <span style={{ width: '4px', height: '4px', background: 'rgba(255,255,255,0.3)', borderRadius: '50%', display: 'inline-block' }} />
+              <span className="login-dot" />
               <span>All rights reserved</span>
             </div>
           </div>
         </div>
 
         {/* 右侧登录区域 */}
-        <div style={{
-          flex: '1 1 45%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '40px',
-          background: '#f8fafc',
-        }}>
-          <div style={{
-            width: '100%',
-            maxWidth: '420px',
-            background: '#fff',
-            borderRadius: '16px',
-            padding: '40px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)',
-          }}>
-            <div style={{ marginBottom: '32px' }}>
-              <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#1e293b', marginBottom: '8px' }}>欢迎登录</h2>
-              <p style={{ fontSize: '14px', color: '#64748b' }}>请使用您的账户信息登录系统</p>
+        <div className="login-form-area">
+          {/* 移动端品牌 header */}
+          <div className="login-mobile-header">
+            <img src="/logo.png" alt="Ozsky" />
+            <div className="login-mobile-brand">
+              <div className="login-mobile-title">Ozsky International</div>
+              <div className="login-mobile-subtitle">移民案件管理系统</div>
+            </div>
+          </div>
+
+          <div className="login-card">
+            <div className="login-card-header">
+              <h2>欢迎登录</h2>
+              <p>请使用您的账户信息登录系统</p>
             </div>
 
             <form onSubmit={handleLogin}>
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>用户</label>
-                <div style={{ position: 'relative' }}>
+              <div className="login-field">
+                <label>用户</label>
+                <div className="login-select-wrapper">
                   <select
                     value={loginForm.name}
                     onChange={e => setLoginForm({...loginForm, name: e.target.value})}
-                    style={{
-                      width: '100%',
-                      padding: '12px 40px 12px 16px',
-                      borderRadius: '10px',
-                      border: '1px solid #e2e8f0',
-                      fontSize: '15px',
-                      color: '#1e293b',
-                      background: '#fff',
-                      appearance: 'none',
-                      WebkitAppearance: 'none',
-                      MozAppearance: 'none',
-                      cursor: 'pointer',
-                    }}
                     required
                   >
                     <option value="">请选择用户</option>
                     <option value="Manager">Manager</option>
                     {AGENTS.map(a => <option key={a} value={a}>{a}</option>)}
                   </select>
-                  <span style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#94a3b8', fontSize: '10px' }}>▼</span>
+                  <span className="login-select-arrow">▼</span>
                 </div>
               </div>
 
-              <div style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>密码</label>
+              <div className="login-field">
+                <label>密码</label>
                 <input
                   type="password"
                   placeholder="输入密码"
                   value={loginForm.password}
                   onChange={e => setLoginForm({...loginForm, password: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    borderRadius: '10px',
-                    border: '1px solid #e2e8f0',
-                    fontSize: '15px',
-                    color: '#1e293b',
-                    outline: 'none',
-                    transition: 'border-color 0.2s',
-                  }}
-                  onFocus={e => e.target.style.borderColor = '#2563eb'}
-                  onBlur={e => e.target.style.borderColor = '#e2e8f0'}
                   required
                 />
               </div>
 
               {loginError && (
-                <div style={{
-                  padding: '12px 16px',
-                  background: '#fef2f2',
-                  borderRadius: '8px',
-                  color: '#dc2626',
-                  fontSize: '14px',
-                  marginBottom: '20px',
-                  textAlign: 'center',
-                }}>
-                  {loginError}
-                </div>
+                <div className="login-error">{loginError}</div>
               )}
 
-              <button
-                type="submit"
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: '#2563eb',
-                  color: '#fff',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'background 0.2s',
-                }}
-                onMouseEnter={e => e.target.style.background = '#1d4ed8'}
-                onMouseLeave={e => e.target.style.background = '#2563eb'}
-              >
-                登录
-              </button>
+              <button type="submit" className="login-btn">登录</button>
 
-              <div style={{
-                marginTop: '24px',
-                textAlign: 'center',
-                fontSize: '13px',
-                color: '#94a3b8',
-              }}>
-                Ozsky Immigration CRM System
-              </div>
+              <div className="login-footer">Ozsky Immigration CRM System</div>
             </form>
           </div>
         </div>
 
-        {/* 响应式：小屏幕时隐藏左侧 */}
         <style>{`
+          .login-page {
+            display: flex;
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, sans-serif;
+          }
+          .login-brand {
+            flex: 1 1 55%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 80px 100px;
+            background: linear-gradient(135deg, #0f2744 0%, #1a365d 30%, #2c5282 70%, #4a7c9b 100%);
+            position: relative;
+            overflow: hidden;
+          }
+          .login-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url(/login-bg.png);
+            background-size: cover;
+            background-position: center bottom;
+            opacity: 0.12;
+          }
+          .login-brand-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          }
+          .login-brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 56px;
+          }
+          .login-brand-logo img {
+            height: 44px;
+            filter: brightness(0) invert(1);
+          }
+          .login-brand-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+          }
+          .login-brand-subtitle {
+            font-size: 13px;
+            color: rgba(255,255,255,0.65);
+            margin-top: 3px;
+            letter-spacing: 0.5px;
+          }
+          .login-brand-headline {
+            font-size: 38px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.25;
+            margin-bottom: 20px;
+            max-width: 480px;
+            letter-spacing: -0.5px;
+          }
+          .login-brand-desc {
+            font-size: 15px;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.7;
+            max-width: 420px;
+          }
+          .login-brand-bottom {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+          }
+          .login-dot {
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: inline-block;
+          }
+
+          .login-form-area {
+            flex: 1 1 45%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: #f8fafc;
+            position: relative;
+          }
+          .login-mobile-header {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 24px 20px;
+            background: linear-gradient(135deg, #0f2744 0%, #1a365d 30%, #2c5282 70%, #4a7c9b 100%);
+          }
+          .login-mobile-header img {
+            height: 36px;
+            filter: brightness(0) invert(1);
+          }
+          .login-mobile-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+          }
+          .login-mobile-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            margin-top: 2px;
+          }
+          .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+          }
+          .login-card-header {
+            margin-bottom: 32px;
+          }
+          .login-card-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+          }
+          .login-card-header p {
+            font-size: 14px;
+            color: #64748b;
+          }
+          .login-field {
+            margin-bottom: 20px;
+          }
+          .login-field label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+          }
+          .login-select-wrapper {
+            position: relative;
+          }
+          .login-select-wrapper select,
+          .login-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 15px;
+            color: #1e293b;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+          }
+          .login-select-wrapper select {
+            padding-right: 40px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+          }
+          .login-select-arrow {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #94a3b8;
+            font-size: 10px;
+          }
+          .login-field input:focus {
+            border-color: #2563eb;
+          }
+          .login-error {
+            padding: 12px 16px;
+            background: #fef2f2;
+            border-radius: 8px;
+            color: #dc2626;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+          }
+          .login-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            background: #2563eb;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+          }
+          .login-btn:hover {
+            background: #1d4ed8;
+          }
+          .login-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: #94a3b8;
+          }
+
+          /* 平板端 */
+          @media (max-width: 1024px) {
+            .login-brand {
+              padding: 48px 40px;
+            }
+            .login-brand-headline {
+              font-size: 32px;
+            }
+            .login-form-area {
+              padding: 32px;
+            }
+            .login-card {
+              padding: 32px;
+            }
+          }
+
+          /* 手机端 */
           @media (max-width: 768px) {
-            .login-split > div:first-child { display: none !important; }
-            .login-split > div:last-child { flex: 1 1 100% !important; }
+            .login-page {
+              flex-direction: column;
+            }
+            .login-brand {
+              display: none;
+            }
+            .login-mobile-header {
+              display: flex;
+            }
+            .login-form-area {
+              flex: 1;
+              padding: 24px 16px;
+              align-items: flex-start;
+              justify-content: flex-start;
+            }
+            .login-card {
+              max-width: 100%;
+              padding: 28px 24px;
+              border-radius: 12px;
+              box-shadow: none;
+            }
+            .login-card-header h2 {
+              font-size: 24px;
+            }
+            .login-field input,
+            .login-select-wrapper select {
+              padding: 14px 16px;
+              font-size: 16px;
+            }
+            .login-btn {
+              padding: 16px;
+              font-size: 16px;
+            }
+          }
+
+          /* 超小屏幕 */
+          @media (max-width: 375px) {
+            .login-card {
+              padding: 24px 20px;
+            }
+            .login-card-header h2 {
+              font-size: 22px;
+            }
           }
         `}</style>
       </div>
     )
   }
-
   if (loading) return <div className="page"><p>加载中...</p></div>
 
   return (
