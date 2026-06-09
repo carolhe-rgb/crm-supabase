@@ -487,8 +487,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div style={{ width: '48px', height: '3px', background: 'rgba(255,255,255,0.4)', borderRadius: '2px', marginBottom: '28px' }} />
-            
+
             <h1 style={{ fontSize: '38px', fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: '20px', maxWidth: '480px', letterSpacing: '-0.5px' }}>
               移民案件管理系统
             </h1>
