@@ -484,7 +484,7 @@ export default function Home() {
                 <img src="/logo.png" alt="OzSky" style={{ height: '44px', maxWidth: 'none' }} />
               </div>
               <div>
-                <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>OzSky International</div>
+                <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>Ozsky International</div>
                 <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.65)', marginTop: '3px', letterSpacing: '0.5px' }}>Education and Migration Agency</div>
               </div>
             </div>
